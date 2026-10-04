@@ -5,6 +5,7 @@ from pathlib import Path
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import (
     accuracy_score,
+    classification_report,
     precision_recall_fscore_support,
     confusion_matrix,
 )
@@ -49,6 +50,21 @@ ID_TO_LABEL = {
     v: k for k, v in LABEL_MAP.items()
 }
 
+# Berapa banyak contoh validasi minimum yang boleh diharapkan ada
+# di setiap fold. StratifiedKFold hanya bisa menyebar ke semua
+# fold jika jumlah anggota kelas >= N_SPLITS.
+MIN_PER_FOLD = N_SPLITS
+
+# Diisi oleh load_and_clean_data(): daftar label yang jumlahnya
+# < N_SPLITS, sehingga TIDAK bisa muncul di setiap fold.
+# Diekspos ke script lain (mis. analysis/class_imbalance_report.py).
+SPARSE_CLASSES = []
+
+# Signature komposisi kelas validasi yang sudah dicetak. Satu fold
+# dievaluasi N_EPOCHS kali; laporan hanya perlu dicetak sekali
+# per komposisi fold yang berbeda.
+_REPORTED_FOLD_SIGNATURES = set()
+
 
 class AspectSentimentDataset(
     torch.utils.data.Dataset
@@ -91,6 +107,327 @@ class AspectSentimentDataset(
         return len(self.labels)
 
 
+def get_sparse_classes(label_counts, n_splits=N_SPLITS):
+    """
+    Kelas yang jumlah anggotanya < n_splits.
+
+    StratifiedKFold hanya bisa menugaskan minimal satu anggota
+    kelas ke tiap fold. Kalau jumlah anggota kelas lebih kecil
+    dari n_splits, beberapa fold PASTI kosong untuk kelas itu,
+    jadi precision/recall/F1 kelas tersebut tidak bisa dihitung
+    di fold-fold itu.
+
+    Return: list of (label, count), diurutkan dari yang paling langka.
+    """
+
+    return [
+        (name, int(count))
+        for name, count in label_counts.items()
+        if int(count) < n_splits
+    ]
+
+
+def print_sparse_class_warning(
+    sparse_classes,
+    n_rows,
+    n_splits=N_SPLITS,
+):
+
+    """
+    Peringatan eksplisit + bisa ditindaklanjuti, bukan sekadar
+    "pastikan tidak ada kelas dengan data kurang dari jumlah fold".
+    Pipeline tetap dilanjutkan; tugasnya memberi tahu dampaknya.
+    """
+
+    print(
+        "\n" + "!" * 68
+    )
+
+    print(
+        f"[PERINGATAN PENTING] {len(sparse_classes)} kelas memiliki "
+        f"< {n_splits} data ({n_rows} baris total), sehingga "
+        "TIDAK bisa di-stratify ke semua fold."
+    )
+
+    print(
+        f"{'label':<34}{'jumlah':>8}{'butuh min':>11}"
+    )
+
+    for name, count in sorted(
+        sparse_classes,
+        key=lambda item: item[1],
+    ):
+
+        print(
+            f"{name:<34}{count:>8}{n_splits:>11}"
+        )
+
+    print(
+        "  Dampak yang terjadi:\n"
+        f"  - SETIAP kelas di atas akan bernilai 0 pada minimal "
+        f"1 dari {n_splits} fold validasi.\n"
+        "  - Pada fold itu, precision/recall/F1 kelas tersebut "
+        "0.000 (support 0).\n"
+        "  - Rata-rata berbobot (weighted) tetap dihitung dan "
+        "tidak error,\n"
+        "    tapi ia menutupi kelas yang benar-benar tidak "
+        "terlihat sama sekali.\n"
+        "  - Std antar fold membesar karena fold dengan dan "
+        "tanpa kelas langka\n"
+        "    tidak bisa dibandingkan secara apples-to-apples."
+    )
+
+    print(
+        "\n  Tindakan yang disarankan (lihat docs/BUG_TRACKER.md BUG-08):\n"
+        f"  1. Turunkan n_splits sehingga n_splits <= jumlah "
+        f"kelas terkecil\n"
+        f"     (mis. n_splits={min(c for _, c in sparse_classes)} "
+        "pada data saat ini).\n"
+        "  2. Gabungkan kelas positif yang sangat langka "
+        "(mis. *_positif\n"
+        "     untuk Responsivitas dan Transparansi).\n"
+        "  3. Atau pertahankan n_splits=10 dan LAPORKAN metrik "
+        "per kelas dengan\n"
+        "     caveat eksplisit. Jalankan:\n"
+        "     python -m analysis.class_imbalance_report"
+    )
+
+    print(
+        "!" * 68
+    )
+
+
+def build_fold_coverage_table(
+    labels_arr,
+    skf=None,
+    n_splits=N_SPLITS,
+):
+
+    """
+    Hitung jumlah contoh validasi tiap kelas pada tiap fold.
+
+    Return: DataFrame dengan kolom
+        fold, label_id, label, n_train, n_val
+    """
+
+    if skf is None:
+
+        skf = StratifiedKFold(
+            n_splits=n_splits,
+            shuffle=True,
+            random_state=RANDOM_STATE,
+        )
+
+    texts_arr = np.zeros(
+        len(labels_arr),
+        dtype=object,
+    )
+
+    rows = []
+
+    for fold_idx, (train_idx, val_idx) in enumerate(
+        skf.split(texts_arr, labels_arr),
+        start=1,
+    ):
+
+        val_counts = (
+            np.bincount(
+                np.asarray(labels_arr)[val_idx],
+                minlength=len(LABEL_MAP),
+            )
+        )
+
+        train_counts = (
+            np.bincount(
+                np.asarray(labels_arr)[train_idx],
+                minlength=len(LABEL_MAP),
+            )
+        )
+
+        for label_id in range(len(LABEL_MAP)):
+
+            rows.append(
+                {
+                    "fold": fold_idx,
+                    "label_id": label_id,
+                    "label": ID_TO_LABEL[label_id],
+                    "n_train": int(train_counts[label_id]),
+                    "n_val": int(val_counts[label_id]),
+                }
+            )
+
+    return pd.DataFrame(rows)
+
+
+def print_fold_integrity_warning(coverage_df, n_splits=N_SPLITS):
+
+    """
+    Cetak tabel peringatan untuk setiap pasangan (fold, kelas)
+    yang tidak punya satupun contoh validasi.
+    """
+
+    missing = coverage_df[
+        coverage_df["n_val"] == 0
+    ].sort_values(
+        ["fold", "label_id"]
+    )
+
+    print(
+        "\n" + "=" * 68
+    )
+
+    print(
+        "CEK INTEGRITAS FOLD  "
+        "(pasangan fold x kelas dengan 0 contoh validasi)"
+    )
+
+    print("=" * 68)
+
+    if missing.empty:
+
+        print(
+            "  Tidak ada. Semua kelas muncul di setiap fold."
+        )
+
+    else:
+
+        print(
+            f"  {len(missing)} pasangan (fold, kelas) "
+            f"tidak punya contoh validasi:\n"
+        )
+
+        print(
+            f"{'fold':>6}{'label_id':>11}"
+            f"{'label':>34}{'n_val':>7}"
+        )
+
+        for _, row in missing.iterrows():
+
+            print(
+                f"{int(row['fold']):>6}"
+                f"{int(row['label_id']):>11}"
+                f"{row['label']:>34}"
+                f"{int(row['n_val']):>7}"
+            )
+
+        affected = sorted(
+            missing["label"].unique()
+        )
+
+        print(
+            f"\n  Kelas terdampak: {len(affected)} dari "
+            f"{len(LABEL_MAP)} -> {affected}"
+        )
+
+        print(
+            f"\n  Pada {missing['fold'].nunique()} dari {n_splits} "
+            "fold, ada kelas yang absen total dari validasi.\n"
+            "  Metrik kelas tersebut di fold itu tidak "
+            "mengukuran apa pun -- bukan karena\n"
+            "  model buruk, tapi karena tidak ada data untuk "
+            "dinilai. Baca\n"
+            "  `fold_class_coverage.csv` sebelum mengutip "
+            "angka mana pun yang\n"
+            "  berasal dari fold-fold ini."
+        )
+
+    print("=" * 68)
+
+    return missing
+
+
+def check_fold_integrity(
+    labels_arr,
+    skf=None,
+    n_splits=N_SPLITS,
+    verbose=True,
+):
+
+    """
+    Dipanggil sekali di awal main() sebelum training dimulai.
+
+    Mengembalikan DataFrame cakupan (fold x kelas) dan, kalau
+    verbose=True, mencetak tabel peringatan (fold, kelas) yang
+    kosong. Fungsi ini tidak pernah menghentikan pipeline.
+    """
+
+    coverage_df = build_fold_coverage_table(
+        labels_arr,
+        skf=skf,
+        n_splits=n_splits,
+    )
+
+    if verbose:
+
+        print_fold_integrity_warning(
+            coverage_df,
+            n_splits=n_splits,
+        )
+
+    return coverage_df
+
+
+def per_class_metrics(labels, preds):
+    """
+    Precision/recall/F1/support per kelas (semua 8 kelas).
+
+    Dipakai oleh compute_metrics supaya kelas langka terlihat,
+    bukan tercebur di dalam weighted average.
+    """
+
+    label_ids = list(range(len(LABEL_MAP)))
+
+    precision, recall, f1, support = (
+        precision_recall_fscore_support(
+            labels,
+            preds,
+            average=None,
+            labels=label_ids,
+            zero_division=0,
+        )
+    )
+
+    report = classification_report(
+        labels,
+        preds,
+        labels=label_ids,
+        target_names=[
+            ID_TO_LABEL[i] for i in label_ids
+        ],
+        zero_division=0,
+        output_dict=True,
+    )
+
+    out = {}
+
+    for pos, label_id in enumerate(label_ids):
+
+        name = ID_TO_LABEL[label_id]
+
+        out[f"precision_{name}"] = float(
+            precision[pos]
+        )
+        out[f"recall_{name}"] = float(
+            recall[pos]
+        )
+        out[f"f1_{name}"] = float(f1[pos])
+        out[f"support_{name}"] = int(
+            support[pos]
+        )
+
+    out["macro_precision"] = float(
+        np.mean(precision)
+    )
+    out["macro_recall"] = float(
+        np.mean(recall)
+    )
+    out["macro_f1"] = float(
+        np.mean(f1)
+    )
+
+    return out, report
+
+
 def compute_metrics(pred):
 
     labels = pred.label_ids
@@ -111,11 +448,73 @@ def compute_metrics(pred):
         preds,
     )
 
+    class_metrics, report = per_class_metrics(
+        labels,
+        preds,
+    )
+
+    # Trainer mengevaluasi tiap epoch pada set validasi yang sama,
+    # jadi cetak laporan hanya sekali per komposisi fold.
+    signature = tuple(
+        sorted(
+            (
+                ID_TO_LABEL[i],
+                int(n),
+            )
+            for i, n in enumerate(
+                np.bincount(
+                    np.asarray(labels),
+                    minlength=len(LABEL_MAP),
+                )
+            )
+        )
+    )
+
+    if signature not in _REPORTED_FOLD_SIGNATURES:
+
+        _REPORTED_FOLD_SIGNATURES.add(signature)
+
+        print(
+            "\nClassification report "
+            "(set validasi fold ini):"
+        )
+
+        print(
+            classification_report(
+                labels,
+                preds,
+                labels=list(range(len(LABEL_MAP))),
+                target_names=[
+                    ID_TO_LABEL[i]
+                    for i in range(len(LABEL_MAP))
+                ],
+                zero_division=0,
+                digits=3,
+            )
+        )
+
+        absent = [
+            name
+            for name in report
+            if isinstance(report[name], dict)
+            and report[name]["support"] == 0
+        ]
+
+        if absent:
+
+            print(
+                f"[PERINGATAN] {len(absent)} kelas tidak ada "
+                f"di set validasi ini: {absent}\n"
+                "  Metrik kelas tersebut 0.000 karena "
+                "support 0, bukan karena prediksi salah."
+            )
+
     return {
         "accuracy": acc,
         "precision": precision,
         "recall": recall,
         "f1": f1,
+        **class_metrics,
     }
 
 
@@ -214,12 +613,27 @@ def load_and_clean_data():
 
     if label_counts.min() < N_SPLITS:
 
-        print(
-            "\n[PERINGATAN] Ada kelas dengan jumlah data "
-            f"< {N_SPLITS} (jumlah fold). StratifiedKFold tetap bisa "
-            "berjalan, tapi pastikan tidak ada kelas dengan data "
-            "kurang dari jumlah fold."
+        sparse_classes = get_sparse_classes(
+            label_counts,
+            n_splits=N_SPLITS,
         )
+
+        print_sparse_class_warning(
+            sparse_classes,
+            n_rows=len(df),
+            n_splits=N_SPLITS,
+        )
+
+    else:
+
+        sparse_classes = []
+
+    # Ekspos ke modul lain supaya tidak perlu menghitung ulang.
+    global SPARSE_CLASSES
+
+    SPARSE_CLASSES = [
+        name for name, _ in sparse_classes
+    ]
 
     return df
 
@@ -332,6 +746,30 @@ def main():
 
     texts_arr = np.array(texts, dtype=object)
     labels_arr = np.array(labels)
+
+    # Deteksi (fold, kelas) yang tidak punya contoh validasi
+    # SEBELUM training berjalan. Tidak menghentikan apa pun.
+    coverage_df = check_fold_integrity(
+        labels_arr,
+        skf=skf,
+        n_splits=N_SPLITS,
+    )
+
+    coverage_path = (
+        CV_RESULT_DIR / "fold_class_coverage.csv"
+    )
+
+    CV_RESULT_DIR.mkdir(parents=True, exist_ok=True)
+
+    coverage_df.to_csv(
+        coverage_path,
+        index=False,
+        encoding="utf-8-sig",
+    )
+
+    print(
+        f"\nCakupan kelas per fold disimpan di: {coverage_path}"
+    )
 
     all_fold_metrics = []
 

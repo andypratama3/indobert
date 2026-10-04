@@ -122,6 +122,53 @@ has effectively learned to emit the negative class for these aspects. Report
 these two aspects with an explicit small-sample caveat, or report per-class
 recall so the limitation is visible rather than implied.
 
+The small counts above are also **not unbiased estimates**, because the model that
+produced them was trained on a set that over-weights exactly these two aspects.
+See the next subsection.
+
+### Sampling bias
+
+116 of the 800 annotated rows are not present in the raw scrape and exist in no
+other file in the repository. They are not a random loss. Their aspect
+distribution is almost the inverse of the corpus:
+
+| Aspect | % of the 684 located rows | % of the 116 unlocated rows |
+|---|---:|---:|
+| Akuntabilitas | 50.6% | 14.7% |
+| Efektivitas dan Efisiensi | 37.1% | 7.8% |
+| **Responsivitas** | **7.0%** | **44.0%** |
+| **Transparansi** | **5.3%** | **33.6%** |
+
+The sentiment split is not skewed the same way (90.1% negative located vs 87.1%
+negative unlocated), so this is topical sampling, not labelling tone. Tested:
+
+| Variable | χ² | df | p | Cramér's V |
+|---|---:|---:|---:|---:|
+| Aspect vs locatability | 248.73 | 3 | 1.2 × 10⁻⁵³ | **0.558** |
+| Sentiment vs locatability | 0.95 | 1 | 0.33 | 0.035 |
+
+The net effect on the training prior:
+
+| Aspect | Training | Corpus | Ratio |
+|---|---:|---:|---:|
+| Akuntabilitas | 45.38% | 61.69% | 0.74× |
+| Efektivitas dan Efisiensi | 32.88% | 29.00% | 1.13× |
+| Responsivitas | 12.38% | 6.21% | 1.99× |
+| Transparansi | 9.38% | 3.10% | 3.03× |
+| **Responsivitas + Transparansi** | **21.75%** | **9.31%** | **2.34×** |
+
+So the 64 and 32 figures above are the output of a model whose aspect prior
+over-weights those two aspects by 2.34×, trained on a topic batch that is no
+longer recoverable. The direction of the resulting error is not established: the
+model may be over-assigning these aspects, or the genuinely responsive and
+transparent comments may simply be under-sampled in the corpus. Either way the
+counts are model output under a biased prior, not measurements of how many
+comments the public made about those two aspects. The rarest and most fragile
+class, `responsivitas_positif`, is the worst affected: 6 of its 7 training rows
+are in the lost batch.
+
+Full tables: `data/results/provenance_audit.csv`; see BUG-07.
+
 ---
 
 ## 5. Negative-comment thematic breakdown
@@ -204,17 +251,22 @@ From `data/results/identifikasi_permasalahan/` and the four
 > agreement of 78.37%. Aspect classification reaches 84.59% and sentiment
 > classification 91.41%.
 >
-> **Caveats that must accompany this conclusion.** First, the 673 annotated
-> comments and 358 unannotated comments are not statistically equivalent; the
+> **Caveats that must accompany this conclusion.** First, the annotated
+> comments and the unannotated comments are not statistically equivalent; the
 > annotated subset was selected for labelling, and if that selection was not
-> random the corpus distribution inherits that bias. Second, `Responsivitas` (64
-> comments) and `Transparansi` (32 comments) rest on very small samples and
-> receive zero positive predictions, reflecting 7 and 6 positive training examples
-> respectively rather than genuine consensus. Third, 116 of the 800 annotated
-> comments could not be located in the raw scrape, so the corpus and the
-> annotation sample derive from two collection batches (BUG-07). Fourth, the raw
-> TikTok scrape cannot be regenerated from this repository, since the committed
-> scraper targets Twitter/X (BUG-09).
+> random the corpus distribution inherits that bias. Second, and quantified in
+> section 4: **the annotation sample over-weights `Responsivitas` and
+> `Transparansi` by 2.34× relative to the corpus** (21.75% of the training set
+> against 9.31% of the corpus; χ² = 248.73, df = 3, p ≈ 1.2 × 10⁻⁵³,
+> Cramér's V = 0.558), because 116 of the 800 annotated rows are not present in
+> the raw scrape and 90 of those 116 are `Responsivitas` or `Transparansi`. Those
+> rows are unrecoverable. Third, `Responsivitas` (64 comments) and
+> `Transparansi` (32 comments) rest on very small samples, receive zero positive
+> predictions, and are the two aspects most distorted by that bias — reflecting
+> 7 and 6 positive training examples respectively rather than genuine consensus.
+> The 100% negative rate reported for both must not be presented as public
+> unanimity. Fourth, the raw TikTok scrape cannot be regenerated from this
+> repository, since the committed scraper targets Twitter/X (BUG-09).
 
 ---
 
@@ -227,8 +279,18 @@ From `data/results/identifikasi_permasalahan/` and the four
 | `config.py` | single source of truth for all paths |
 | `preprocessing/text_cleaning.py` | canonical cleaner, reproduces training data exactly |
 | `indobert/predict_absa_oof.py` | leakage-free out-of-fold inference |
+| `analysis/provenance_audit.py` | locatability + sampling-bias audit (BUG-07) |
 | `docs/BUG_TRACKER.md` | full audit |
 | `docs/RESULTS_FIXED.md` | this document |
+
+**Audit outputs**
+
+| File | Purpose |
+|---|---|
+| `data/results/provenance_audit.csv` | locatability, aspect/sentiment skew, χ² and Cramér's V, training-vs-corpus priors |
+| `data/results/provenance_missing_rows.csv` | the 116 unlocatable annotated rows |
+| `data/annotation/annotated_not_in_corpus.csv` | the same 116 rows, preserved as a tracked annotation artefact |
+| `data/annotation/README.md` | provenance disclosure sitting next to the annotation data |
 
 **Rewritten outputs**
 

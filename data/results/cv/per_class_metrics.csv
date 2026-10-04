@@ -1,0 +1,9 @@
+﻿label,label_id,support,tp,fp,fn,precision,recall,f1,total,min_per_fold,max_per_fold,n_folds_zero,folds_zero
+akuntabilitas_negatif,3,305,260,80,45,0.7647,0.8525,0.8062,305,30,31,0,
+efektivitas_efisiensi_negatif,5,251,223,38,28,0.8544,0.8884,0.8711,251,25,26,0,
+responsivitas_negatif,7,92,65,24,27,0.7303,0.7065,0.7182,92,9,10,0,
+transparansi_negatif,1,69,49,13,20,0.7903,0.7101,0.7481,69,6,7,0,
+akuntabilitas_positif,2,58,24,20,34,0.5455,0.4138,0.4706,58,5,6,0,
+efektivitas_efisiensi_positif,4,12,0,4,12,0.0,0.0,0.0,12,1,2,0,
+responsivitas_positif,6,7,0,0,7,0.0,0.0,0.0,7,0,1,3,1;2;3
+transparansi_positif,0,6,0,0,6,0.0,0.0,0.0,6,0,1,4,2;3;4;5

@@ -10,6 +10,37 @@ cd D:\skripsi_indobert_sentiment
 
 ---
 
+## Fastest path — one click
+
+Double-click **`run_all.bat`**, or:
+
+```powershell
+.\run_all.bat
+```
+
+That runs all 18 stages except retraining and finishes in about **2.5 minutes**.
+It rebuilds every file in `data/processed/` and `data/results/`, verifies each
+stage actually produced its declared outputs, and stops with a non-zero exit code
+if anything fails.
+
+```powershell
+python run_all.py --list           # show the stages
+python run_all.py --include-train  # also retrain the 10 folds (hours, ~80 GB)
+python run_all.py --only predict   # run one stage
+python run_all.py --from 6         # resume from a stage
+python run_all.py --skip 15 16     # skip stages
+python run_all.py --keep-going     # do not stop on the first failure
+python run_all.py --cleanup        # delete stale checkpoints first (destructive)
+```
+
+Stage 3 is a **hard gate**. If the training data no longer reproduces byte-for-byte
+— the failure mode behind BUG-05 and BUG-12 — the run aborts rather than feeding
+the models unfamiliar text.
+
+The steps below explain what each stage does.
+
+---
+
 ## Step 0 — Environment (once)
 
 Python 3.13 is what this was developed against.
@@ -20,11 +51,18 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-`accelerate` is needed by `transformers.Trainer` but is not listed in
-`requirements.txt`. Install it explicitly:
+`accelerate` is required by `transformers.Trainer` (used by
+`indobert/train_indobert.py`, `train_sentiment.py`, `train_aspect.py`, and
+`train_cv.py`) and is now listed in `requirements.txt`, so the single
+`pip install -r requirements.txt` above is enough.
 
-```powershell
-pip install accelerate
+All versions in `requirements.txt` are pinned to the ones this repo was
+developed and measured with. On Linux with an NVIDIA GPU, install the CUDA
+build of torch first so pip does not overwrite it:
+
+```bash
+pip install torch==2.12.0 --index-url https://download.pytorch.org/whl/cu124
+pip install -r requirements.txt
 ```
 
 Verify:
@@ -248,6 +286,12 @@ distribution shifts the interpretation.
 ## Full clean run
 
 ```powershell
+.\run_all.bat
+```
+
+Or stage by stage:
+
+```powershell
 .\.venv\Scripts\python.exe -m preprocessing.preprocess
 .\.venv\Scripts\python.exe -m preprocessing.preprocess_absa
 .\.venv\Scripts\python.exe -m indobert.train_cv
@@ -259,6 +303,8 @@ distribution shifts the interpretation.
 .\.venv\Scripts\python.exe -m identifikasi_masalah_responsivitas
 .\.venv\Scripts\python.exe -m identifikasi_masalah_transparansi
 .\.venv\Scripts\python.exe -m analysis.analysis_pipeline
+.\.venv\Scripts\python.exe -m analysis.provenance_audit
+.\.venv\Scripts\python.exe -m analysis.class_imbalance_report
 .\.venv\Scripts\python.exe -m visualization.visualize_absa
 .\.venv\Scripts\python.exe -m visualization.plot_confusion_matrix
 ```

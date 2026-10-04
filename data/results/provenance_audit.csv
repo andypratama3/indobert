@@ -1,0 +1,22 @@
+﻿section,key,n_total,n_located,pct_of_annotated,n_not_located,n_rows,n_located_strict,note,pct_located,pct_not_located,n_corpus,pct_corpus,train_over_corpus_ratio,expected_not_located_if_random,actual_over_expected,skewed,statistic,dof,p_value,cramers_v,threshold,material_bias,cross_check
+summary,annotated_rows,800.0,,,,,,,,,,,,,,,,,,,,,
+summary,located_in_raw,,684.0,85.5,,,,,,,,,,,,,,,,,,,
+summary,not_in_raw,,,14.5,116.0,,,,,,,,,,,,,,,,,,
+summary,degenerate_normalisation_key,,,,,1.0,683.0,"text normalises to the empty string; the match is not evidence of provenance. Headline counts use the documented method including these rows, matching BUG_TRACKER.md BUG-07",,,,,,,,,,,,,,,
+aspect_distribution,Akuntabilitas,363.0,346.0,45.4,17.0,,,,50.6,14.7,636.0,61.69,0.74,52.6,0.32,False,,,,,,,
+aspect_distribution,Efektivitas & Efisiensi,263.0,254.0,32.9,9.0,,,,37.1,7.8,299.0,29.0,1.13,38.1,0.24,False,,,,,,,
+aspect_distribution,Responsivitas,99.0,48.0,12.4,51.0,,,,7.0,44.0,64.0,6.21,1.99,14.4,3.55,True,,,,,,,
+aspect_distribution,Transparansi,75.0,36.0,9.4,39.0,,,,5.3,33.6,32.0,3.1,3.03,10.9,3.59,True,,,,,,,
+sentiment_distribution,Negatif,717.0,616.0,,101.0,,,,90.1,87.1,,,,,,,,,,,,,
+sentiment_distribution,Positif,83.0,68.0,,15.0,,,,9.9,12.9,,,,,,,,,,,,,
+label_distribution,Responsivitas_Positif,7.0,1.0,,6.0,,,,,,,,,1.0,6.0,True,,,,,,,
+label_distribution,Transparansi_Negatif,69.0,31.0,,38.0,,,,,,,,,10.0,3.8,True,,,,,,,
+label_distribution,Responsivitas_Negatif,92.0,47.0,,45.0,,,,,,,,,13.3,3.38,True,,,,,,,
+label_distribution,Efektivitas & Efisiensi_Positif,12.0,10.0,,2.0,,,,,,,,,1.7,1.18,False,,,,,,,
+label_distribution,Transparansi_Positif,6.0,5.0,,1.0,,,,,,,,,0.9,1.11,False,,,,,,,
+label_distribution,Akuntabilitas_Positif,58.0,52.0,,6.0,,,,,,,,,8.4,0.71,False,,,,,,,
+label_distribution,Akuntabilitas_Negatif,305.0,294.0,,11.0,,,,,,,,,44.2,0.25,False,,,,,,,
+label_distribution,Efektivitas & Efisiensi_Negatif,251.0,244.0,,7.0,,,,,,,,,36.4,0.19,False,,,,,,,
+chi_square,aspect_vs_located,,,,,,,,,,,,,,,,248.7345,3.0,1.2289686925306328e-53,0.5576,0.1,True,manual p=1.228969e-53 vs scipy p=1.228969e-53 -> AGREE
+chi_square,sentiment_vs_located,,,,,,,,,,,,,,,,0.9533,1.0,0.32889274505527344,0.0345,0.1,False,manual p=3.288927e-01 vs scipy p=3.288927e-01 -> AGREE
+sampling_bias_warning,warning_1,,,,,,,ASPECT SAMPLING BIAS: Cramer's V = 0.558 between corpus locatability and aspect (threshold 0.1). The 116 unlocatable annotated rows are not a random sample of the annotation set; they over-represent Responsivitas and Transparansi. Any aspect-level figure reported from this model is affected and must carry this caveat.,,,,,,,,,,,,,,,

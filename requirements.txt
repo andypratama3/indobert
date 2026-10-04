@@ -1,9 +1,32 @@
-pandas
-numpy
-torch
-transformers
-scikit-learn
-matplotlib
-seaborn
-selenium
-tqdm
+# Direct dependencies only - the transitive closure is deliberately not listed.
+# Versions are pinned to the ones actually installed in .\.venv so a fresh
+# install reproduces the metrics reported in the thesis (BUG-11).
+# Target: Python 3.13 on Windows 11 (CUDA build of torch not needed locally).
+
+# NOTE on torch: the pinned wheel is the CPU/default build used on Windows.
+# On Linux with an NVIDIA GPU, install torch from the official CUDA index
+# FIRST, then install everything else from this file, otherwise pip will
+# overwrite the CUDA build with the default one:
+#
+#   pip install torch==2.12.0 --index-url https://download.pytorch.org/whl/cu124
+#   pip install -r requirements.txt
+#
+# Train/eval stack
+torch==2.12.0
+transformers==5.8.1
+accelerate==1.13.0
+scikit-learn==1.8.0
+
+# Data
+pandas==3.0.3
+numpy==2.4.6
+
+# Visualisation
+matplotlib==3.10.9
+seaborn==0.13.2
+
+# Scraping (scraper/scraper.py, scraper/tiktok_scraper.py)
+selenium==4.44.0
+
+# Utilities
+tqdm==4.67.3
