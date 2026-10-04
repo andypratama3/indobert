@@ -1,0 +1,9 @@
+﻿,transparansi_positif,transparansi_negatif,akuntabilitas_positif,akuntabilitas_negatif,efektivitas_efisiensi_positif,efektivitas_efisiensi_negatif,responsivitas_positif,responsivitas_negatif
+transparansi_positif,0,0,1,0,0,0,0,0
+transparansi_negatif,0,5,0,2,0,0,0,0
+akuntabilitas_positif,0,0,4,1,0,1,0,0
+akuntabilitas_negatif,0,1,2,27,0,0,0,1
+efektivitas_efisiensi_positif,0,0,0,1,0,0,0,0
+efektivitas_efisiensi_negatif,0,0,3,1,0,21,0,0
+responsivitas_positif,0,0,0,0,0,0,0,0
+responsivitas_negatif,0,2,1,1,0,0,0,5
