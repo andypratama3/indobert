@@ -1,176 +1,49 @@
-import pandas as pd
-import torch
-from pathlib import Path
-from transformers import pipeline
+"""
+DEPRECATED -- DO NOT RUN. Retained only as an audit artefact.
 
-# ============================
-# PATH
-# ============================
+This module reproduces BUG-01. It loaded a single fold model
+(`models/indobert_aspect_sentiment_cv/fold_6`) and predicted every row of the
+corpus. Because the corpus is a superset of the annotated training set, 673 of
+the 998 rows it scored (67.4%) had been seen by that model during fine-tuning.
 
-INPUT_PATH = Path(
-    "data/processed/comments_clean.csv"
-)
+The output it produced, `data/results/indobert_absa_result.csv`, was the
+contaminated input that every downstream analysis script originally consumed. It
+reported 97.19% exact-label accuracy against a true figure near 78%, and that
+overstatement propagated into every table and figure under `data/results/`.
 
-OUTPUT_PATH = Path(
-    "data/results/indobert_absa_result.csv"
-)
+The original implementation is preserved in git history at commit 876dc00 and its
+predecessor 54c98db.
 
-MODEL_PATH = (
-    "models/indobert_aspect_sentiment_cv/fold_6"
-)
+USE INSTEAD
+-----------
+    python -m indobert.predict_absa_oof
 
-# ============================
-# MAIN
-# ============================
+That performs out-of-fold prediction: each annotated row is scored by the one
+fold model that held it out, and never-annotated rows by a ten-fold majority
+vote. No row is scored by a model that trained on it.
 
-def main():
+Nothing in the pipeline imports this module. It is safe to delete once you no
+longer need it as a reference.
+"""
 
-    print("=" * 60)
-    print("INDOBERT ABSA PREDICTION")
-    print("=" * 60)
+import sys
 
-    print("\nLoading dataset...")
+MESSAGE = """\
+ABORTED: indobert/predict_absa.py is deprecated.
 
-    df = pd.read_csv(INPUT_PATH)
+It leaks training data into inference (BUG-01): 673 of 998 predicted rows, 67.4%,
+had been seen by the model during fine-tuning. Every number it produced is
+unusable.
 
-    texts = (
-        df["clean_text"]
-        .fillna("")
-        .astype(str)
-        .tolist()
-    )
+Run instead:
+    python -m indobert.predict_absa_oof
+"""
 
-    device = (
-        0 if torch.cuda.is_available()
-        else -1
-    )
 
-    print("Loading model Fold 6...")
-
-    classifier = pipeline(
-        "text-classification",
-        model=MODEL_PATH,
-        tokenizer=MODEL_PATH,
-        device=device,
-        truncation=True,
-        max_length=256,
-    )
-
-    print("Predicting...")
-
-    results = classifier(
-        texts,
-        batch_size=16,
-    )
-
-    df["predicted_label"] = [
-        r["label"]
-        for r in results
-    ]
-
-    df["prediction_score"] = [
-        round(r["score"],4)
-        for r in results
-    ]
-
-    # ============================
-    # Pisahkan aspek & sentimen
-    # ============================
-
-    df["predicted_aspect"] = (
-        df["predicted_label"]
-        .str.rsplit("_",n=1)
-        .str[0]
-    )
-
-    df["predicted_sentiment"] = (
-        df["predicted_label"]
-        .str.rsplit("_",n=1)
-        .str[1]
-    )
-
-    aspect_map = {
-
-        "transparansi":
-            "Transparansi",
-
-        "akuntabilitas":
-            "Akuntabilitas",
-
-        "efektivitas_efisiensi":
-            "Efektivitas dan Efisiensi",
-
-        "responsivitas":
-            "Responsivitas",
-
-    }
-
-    sentiment_map = {
-
-        "positif":
-            "Positif",
-
-        "negatif":
-            "Negatif",
-
-    }
-
-    df["predicted_aspect"] = (
-        df["predicted_aspect"]
-        .replace(aspect_map)
-    )
-
-    df["predicted_sentiment"] = (
-        df["predicted_sentiment"]
-        .replace(sentiment_map)
-    )
-
-    OUTPUT_PATH.parent.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
-    df.to_csv(
-        OUTPUT_PATH,
-        index=False,
-        encoding="utf-8-sig",
-    )
-
-    print("\n===================================")
-    print("PREDIKSI SELESAI")
-    print("===================================")
-
-    print(
-        f"\nTotal komentar : {len(df)}"
-    )
-
-    print(
-        f"\nHasil disimpan :\n{OUTPUT_PATH}"
-    )
-
-    print("\nDistribusi Aspek")
-
-    print(
-        df["predicted_aspect"]
-        .value_counts()
-    )
-
-    print("\nDistribusi Sentimen")
-
-    print(
-        df["predicted_sentiment"]
-        .value_counts()
-    )
-
-    print("\nDistribusi Aspek x Sentimen")
-
-    print(
-        pd.crosstab(
-            df["predicted_aspect"],
-            df["predicted_sentiment"]
-        )
-    )
+def main() -> int:
+    print(MESSAGE)
+    return 2
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
