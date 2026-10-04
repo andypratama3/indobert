@@ -10,9 +10,7 @@ import config
 
 INPUT_PATH = config.ABSA_RESULT
 
-OUTPUT_DIR = Path(
-    "data/results/visualization"
-)
+OUTPUT_DIR = config.VISUALIZATION_DIR
 
 OUTPUT_DIR.mkdir(
     parents=True,

@@ -208,7 +208,21 @@ STAGES: list[Stage] = [
         ],
     ),
     Stage(
-        17, "viz_cm", "Confusion matrix figures",
+        17, "viz_annotation", "Annotation dataset figures",
+        module="visualization.visualize",
+        inputs=["data/annotation/dataset_train.csv"],
+        outputs=[
+            "data/results/visualization/jumlah_data.png",
+            "data/results/visualization/distribusi_final_label.png",
+            "data/results/visualization/distribusi_aspek_annotasi.png",
+            "data/results/visualization/distribusi_sentimen_annotasi.png",
+        ],
+        note="Describes the annotated sample itself, not the predictions. "
+             "Filenames carry an _annotasi suffix so they cannot collide with "
+             "the prediction figures written by stage 16.",
+    ),
+    Stage(
+        18, "viz_cm", "Confusion matrix figures",
         module="visualization.plot_confusion_matrix",
         inputs=["data/results/cv"],
         outputs=[

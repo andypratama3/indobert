@@ -41,7 +41,93 @@ The steps below explain what each stage does.
 
 ---
 
-## Step 0 — Environment (once)
+## Where the outputs land
+
+Everything the pipeline produces is under `data/`. Nothing is written anywhere
+else.
+
+### `data/processed/` — intermediate datasets
+
+| File | Rows | Meaning |
+|---|---:|---|
+| `comments_clean.csv` | 1031 | analysable corpus; `clean_text` is what the model receives |
+| `dataset_train_clean.csv` | 800 | the fine-tuning data; must reproduce 800/800 byte-for-byte |
+
+### `data/results/` — all analysis results
+
+**Predictions**
+
+| File | Meaning |
+|---|---|
+| `indobert_absa_result_oof.csv` | **the one to use.** 1031 rows, leakage-free, with `prediction_source` per row |
+| `indobert_absa_result.csv` | contaminated original. Audit only, never cite |
+| `indobert_absa_result_leaky.csv` | preserved copy of the above |
+
+**Per-aspect findings** (`rekap_*` = category counts, `bukti_*` = row-level evidence)
+
+`rekap_masalah_akuntabilitas.csv` · `rekap_masalah_efektivitas_efisiensi.csv` ·
+`rekap_masalah_responsivitas.csv` · `rekap_masalah_transparansi.csv` and the four
+matching `bukti_komentar_*.csv`
+
+**Thematic analysis**
+
+`thematic_coding_result.csv` (row level) · `thematic_summary.csv` (frequency per aspect)
+
+**Model evaluation**
+
+| File | Contents |
+|---|---|
+| `cv/cv_summary_metrics.csv` | mean and std across the 10 folds |
+| `cv/per_class_metrics.csv` | **per-class precision/recall/F1 — read this, not the weighted average** |
+| `cv/fold_class_coverage.csv` | which folds contain which classes |
+| `cv/confusion_matrix_fold_*.csv` | per-fold confusion matrices |
+| `cv/confusion_matrix_overall.csv` | all folds summed |
+
+**Audits**
+
+`provenance_audit.csv` · `provenance_missing_rows.csv`
+
+### `data/results/identifikasi_permasalahan/` — RCA, for Chapter 5
+
+| File | Use |
+|---|---|
+| `rca_rekomendasi.csv` | 5-Whys RCA and recommendations per aspect |
+| `laporan_lengkap.csv` | the same, open in Excel |
+| `sampel_komentar_negatif.csv` | qualitative sample, 8 comments per aspect |
+| `distribusi_aspek_sentimen.csv` | aspect × sentiment counts |
+| `distribusi_negatif_per_aspek.png` | summary figure |
+
+### `data/results/visualization/` — figures
+
+Two families, distinguishable by name. Do not mix them up.
+
+**From model predictions** (`indobert_absa_result_oof.csv`) — these are the
+results:
+
+`distribusi_aspek.png` · `distribusi_sentimen.png` ·
+`aspect_sentiment_distribution.png` · `gambar_5_10_distribusi_tema.png` ·
+`confusion_matrix_fold_1..10.png`
+
+**From the annotated sample** (`dataset_train.csv`) — these describe the training
+data, not what the model found:
+
+`distribusi_aspek_annotasi.png` · `distribusi_sentimen_annotasi.png` ·
+`distribusi_final_label.png` · `jumlah_data.png`
+
+The `_annotasi` suffix is deliberate. Both scripts previously wrote
+`distribusi_aspek.png` and `distribusi_sentimen.png`, so the annotation figures
+silently overwrote the prediction ones depending on stage order.
+
+### Two files that are NOT regenerated
+
+`data/results/confusion_matrix.csv` and
+`data/results/indobert_aspect_sentiment_evaluation.csv` are leftovers from
+superseded training scripts (`indobert/train_aspect.py`, `indobert/train_indobert.py`)
+whose input file `data/processed/aspect_annotation_final_clean.csv` is not in the
+repository. No current stage writes or reads them. They predate the leakage fix,
+so do not cite them.
+
+---
 
 Python 3.13 is what this was developed against.
 

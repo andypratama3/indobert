@@ -1,12 +1,27 @@
+"""
+Figures describing the ANNOTATED sample, not the model predictions.
+
+Use `visualization.visualize_absa` for anything derived from
+`indobert_absa_result_oof.csv`.
+
+Every output name here carries an `_annotasi` suffix. The two scripts used to
+write `distribusi_aspek.png` and `distribusi_sentimen.png` to the same paths with
+different contents, so whichever ran last silently overwrote the other and the
+figure on disk depended on stage order. Distinct filenames make that impossible.
+"""
+
 import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 
+import config
+
 # ==========================
 # PATH
 # ==========================
-INPUT_PATH = Path("data/annotation/dataset_train.csv")
-OUTPUT_DIR = Path("data/results/visualization")
+INPUT_PATH = config.ANNOTATION_DATASET
+RAW_PATH = config.RAW_COMMENTS
+OUTPUT_DIR = config.VISUALIZATION_DIR
 
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -22,9 +37,12 @@ def plot_dataset_summary():
         "Dataset Penelitian"
     ]
 
+    # Counted from the files, never hardcoded. These previously read 1081 and
+    # 800 as literals, so the figure would have kept showing the old numbers
+    # after either dataset changed.
     values = [
-        1081,
-        800
+        len(pd.read_csv(RAW_PATH)),
+        len(pd.read_csv(INPUT_PATH)),
     ]
 
     plt.figure(figsize=(7,5))
@@ -73,7 +91,7 @@ def plot_aspect(df):
     plt.tight_layout()
 
     plt.savefig(
-        OUTPUT_DIR / "distribusi_aspek.png",
+        OUTPUT_DIR / "distribusi_aspek_annotasi.png",
         dpi=300
     )
 
@@ -101,7 +119,7 @@ def plot_sentiment(df):
     plt.tight_layout()
 
     plt.savefig(
-        OUTPUT_DIR / "distribusi_sentimen.png",
+        OUTPUT_DIR / "distribusi_sentimen_annotasi.png",
         dpi=300
     )
 
