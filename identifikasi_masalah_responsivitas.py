@@ -1,4 +1,4 @@
-"""
+﻿"""
 identifikasi_masalah_responsivitas.py
 
 Mengidentifikasi INTI MASALAH pada setiap komentar bersentimen Negatif
@@ -20,7 +20,9 @@ import re
 import pandas as pd
 from pathlib import Path
 
-INPUT_PATH = Path("data/results/indobert_absa_result.csv")
+import config
+
+INPUT_PATH = config.ABSA_RESULT
 OUTPUT_DETAIL_PATH = Path("data/results/bukti_komentar_responsivitas.csv")
 OUTPUT_SUMMARY_PATH = Path("data/results/rekap_masalah_responsivitas.csv")
 

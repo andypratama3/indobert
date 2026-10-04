@@ -1,14 +1,14 @@
-import pandas as pd
+﻿import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
+
+import config
 
 # ======================================================
 # PATH
 # ======================================================
 
-INPUT_PATH = Path(
-    "data/results/indobert_absa_result.csv"
-)
+INPUT_PATH = config.ABSA_RESULT
 
 OUTPUT_DIR = Path(
     "data/results/visualization"

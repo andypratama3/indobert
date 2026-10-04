@@ -1,4 +1,4 @@
-"""
+﻿"""
 thematic_coding.py
 
 Tahap analisis lanjutan setelah prediksi ABSA (predict_absa.py).
@@ -16,10 +16,12 @@ import re
 import pandas as pd
 from pathlib import Path
 
+import config
+
 # ---------------------------------------------------------------------------
 # 1. Konfigurasi path (mengikuti struktur folder project)
 # ---------------------------------------------------------------------------
-INPUT_PATH = Path("data/results/indobert_absa_result.csv")
+INPUT_PATH = config.ABSA_RESULT
 OUTPUT_DETAIL_PATH = Path("data/results/thematic_coding_result.csv")
 OUTPUT_SUMMARY_PATH = Path("data/results/thematic_summary.csv")
 

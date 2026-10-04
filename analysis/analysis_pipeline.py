@@ -1,23 +1,31 @@
 """
 Pipeline: Identifikasi Permasalahan + RCA + Rekomendasi
-Input  : data/results/indobert_absa_result.csv
+Input  : data/results/indobert_absa_result_oof.csv  (leakage-free predictions)
 Output : data/results/identifikasi_permasalahan/
+
+Note: previously read data/results/indobert_absa_result.csv, which contained
+out-of-fold-contaminated predictions. See docs/BUG_TRACKER.md BUG-04.
 """
+
+import os
+import sys
+import warnings
 
 import pandas as pd
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-import os
-import warnings
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import config
+
 warnings.filterwarnings("ignore")
 
 # ── PATH ──────────────────────────────────────────────────────────────────────
 BASE_DIR  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-INPUT_CSV = os.path.join(BASE_DIR, "data", "results", "indobert_absa_result.csv")
-OUT_DIR   = os.path.join(BASE_DIR, "data", "results", "identifikasi_permasalahan")
+INPUT_CSV = str(config.BASE_DIR / config.ABSA_RESULT)
+OUT_DIR   = str(config.BASE_DIR / config.IDENTIFIKASI_DIR)
 os.makedirs(OUT_DIR, exist_ok=True)
 
 RANDOM_STATE   = 42     # seed tetap agar sampling dapat direproduksi
