@@ -508,6 +508,7 @@ Satu per satu:
 | 11 | **12 dari 43 referensi (28%) tidak pernah disitasi** di seluruh badan teks — cacat yang lazim diperiksa penguji. | ✅ **diperbaiki (ronde 8)** — kesemuanya disitakan di titik paling cocok (Bab 1.1, Bab 2 ×4, RCA ×2), semua sumber memenuhi syarat penulis: dari Indonesia, terbit ≥ 2021. Kini **43/43 disitasi**; arah sebaliknya sudah bersih, dan `(Sinuraya, 2004)` dipastikan kutipan sekunder yang memang tidak boleh didaftar. |
 | 12 | **Tabel RCA kosong 9 baris di ujung Bab 5** — label `Isu Kritis` / `Why 1–5` / `Akar Masalah` / `Rekomendasi` ada, tetapi kolom "Hasil Analisis" **seluruhnya kosong**, berborder `single` (terlihat), tanpa caption, diapit 20 paragraf kosong, tepat sebelum heading BAB 6. Ada juga di `work/original_backup.docx` (sisa *scaffold* penulis). | ✅ **dihapus (ronde 9)** — 21 node dibuang (tabel + caption `Keterangan` kosong + 20 paragraf kosong). Heading BAB 6 diberi **`pageBreakBefore` pada paragrafnya langsung**, bukan pada style: `Judul`/`Title` memang tidak punya `pageBreakBefore` dan tidak ada satu pun *page break* manual di dokumen, jadi sebelumnya Bab 6 hanya *"kebetulan"* mulai halaman baru karena 15 paragraf kosong itu. Gaya `Title` tidak disentuh → DAFTAR ISI aman. |
 | 13 | **Spasi nyasar di heading + kapitalisasi `Tiktok`.** 6 heading berspasi **ekor** (`2.2`, `2.3`, `2.4`, `2.5`, `2.6` dan heading BAB 4), 1 heading berspasi **depan** (`Teknik Analisis Data` — satu-satunya dari 41+ heading), judul `2.8 … Komentar Tiktok` menulis `Tiktok` padahal 82 kemunculan lain sudah `TikTok`, plus 5 paragraf prosa/halaman judul ikut berspasi. | ✅ **diperbaiki (ronde 10)** — 13 paragraf disentuh, seluruhnya murni whitespace + kapitalisasi. Penomoran 4.1–4.6 aman karena `numPr` hidup di **style**, dan entri DAFTAR ISI `2.8` ikut ter-regenerate otomatis. **Pemeriksanya** (`postchk.py`) ikut dikoreksi: ia mengecualikan caption dalam *text box* sehingga DAFTAR GAMBAR 10 dianggap ber-caption 9. |
+| 14 | **Dua cacat mikro teks.** (a) `Persamaan 2.4..` — titik ganda di akhir kalimat F1-score (Bab 2); (b) label `Responsivitas _Negatif` — satu-satunya dari 12 label `*_Negatif/*_Positif` yang berspasi sebelum `_`. | ✅ **diperbaiki (ronde 11)** — titik-ganda → satu titik; label → `Responsivitas_Negatif` konsisten dengan saudaranya. Kata 25.892 → 25.891 karena dua token bergabung setelah spasi dibuang. Sapuan luas ikut membuktikan **bersih**: tanpa artefak teknis, tanpa `w:ins`/`w:del`/komentar, tanpa kalimat kembar, `saya/kami` hanya muncul di kutipan komentar & judul berita (data/sumber, bukan suara penulis). |
 
 ### Koreksi atas laporan saya sebelumnya ❌
 
@@ -590,6 +591,34 @@ sudah diberi disclaimer benar di p481 ("satu proses pelatihan… belum dapat dij
   salah sasaran karena caption RCA sudah lebih dulu diganti 4.6 → 4.5 sehingga
   ada dua tabel "Algoritme 4.5" dan loop mengambil kecocokan terakhir. Dipulihkan
   dari backup `work/pre_hapus_4647.docx`, seleksi diganti berdasar *judul* caption.
+
+### Ronde 11 — dua cacat mikro teks (titik ganda & label berspasi) ✅
+
+- **Temuan lewat sapuan luas ronde 11** (pola `fold#`, sisa template, frasa kaku,
+  singkatan alay `yg/dgn/utk/krn`, `Rp d(=d.`, kata ganti orang pertama, referensi
+  `Persamaan`, `w:ins`/`w:del`, kalimat kembar, titik-koma/koma ganda, label
+  `*_Negatif/*_Positif`). Hampir semuanya **nihil** atau *false positive* sah:
+  - kutipan komentar mentah sering "tidak beraturan" (titik/emoji/`yg`) — itu **data**,
+    bukan teks penulis; tabel aspek memang berisi label berulang karena itu hasil
+    annotator/AI/researcher yang **setuju** (Tabel 4.3–4.4);
+  - `dst`/`dll` di dua kalimat Bab 5 = singkatan lazim yang sah;
+  - `saya`/`kami` hanya pada kutipan komentar dan sebuah judul berita di referensi —
+    tidak ada suara orang pertama penulis di prosa;
+  - `diatas/dibawah/diantara` tidak ada; `Persamaan 2.1–2.4` semuanya dirujuk;
+  - **`w:ins=0`, `w:del=0`, komentar Word=0** — dokumen bersih dari jejak revisi.
+- **Dua cacat nyata yang diperbaiki:**
+  1. **`Persamaan 2.4..`** (Bab 2, definisi F1-score) — titik ganda di akhir kalimat;
+     diedit hanya run polos terakhir (`' dihitung menggunakan Persamaan 2.4..'` → `'.'`),
+     italic `F1-score`/`precision`/`recall` tidak tersentuh.
+  2. **`Responsivitas _Negatif`** (Tabel 4.4, kolom Final Label) — satu-satunya dari 12
+     label `*_Negatif/*_Positif` yang berspasi sebelum `_`; diedit menjadi
+     `Responsivitas_Negatif` agar seragam dengan `Akuntabilitas_Negatif` dll.
+- Hasil: **99 halaman, 25.891 kata** (−1 = dua token `Responsivitas _Negatif` melebur
+  menjadi satu saat spasi dibuang), 1.750 paragraf, 46 tabel, 0 error field, inventaris
+  **194 `instrText` / 582 `fldChar` (rasio 3.00)**, rujukan silang **0 putus**, sitasi
+  **43/43**, 47 caption **0 yatim** (DAFTAR TABEL 32=32, DAFTAR GAMBAR 10=10),
+  1.228 run italic tampak identik, 2 penanda `EE0000` identik, selisih teks vs `HEAD`
+  **persis 2 paragraf**, urutan 1.595 teks lain identik.
 
 ### Ronde 10 — spasi nyasar di heading, kapitalisasi TikTok, pemeriksa caption diperbaiki ✅
 
@@ -750,9 +779,9 @@ sudah diberi disclaimer benar di p481 ("satu proses pelatihan… belum dapat dij
 
 ---
 
-*Terakhir disesuaikan pada ronde 10 (spasi nyasar di 6 heading + 1 heading
-berspasi depan + 5 paragraf dibersihkan, judul 2.8 `Tiktok` → `TikTok`, entri
-DAFTAR ISI ikut ter-regenerate, dan `postchk.py` dikoreksi agar menghitung caption
-dalam text box) dengan berkas `Mulai Revisi RCA BARU_..._REVISI.docx`
-(99 halaman, 25.892 kata, 6 subbab di Bab 4, ABSTRAK 204 kata).*
+*Terakhir disesuaikan pada ronde 11 (dua cacat mikro: `Persamaan 2.4..` →
+`Persamaan 2.4.` dan label `Responsivitas _Negatif` → `Responsivitas_Negatif`;
+sapuan luas menyisakan nihil — tanpa jejak revisi, tanpa kalimat kembar, tanpa
+artefak teknis) dengan berkas `Mulai Revisi RCA BARU_..._REVISI.docx`
+(99 halaman, 25.891 kata, 6 subbab di Bab 4, ABSTRAK 204 kata).*
 *Commit pipeline tetap `703d9c4` — kode IndoBERT tidak diubah.*
