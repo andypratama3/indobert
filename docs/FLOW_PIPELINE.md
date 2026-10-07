@@ -510,6 +510,7 @@ Satu per satu:
 | 13 | **Spasi nyasar di heading + kapitalisasi `Tiktok`.** 6 heading berspasi **ekor** (`2.2`, `2.3`, `2.4`, `2.5`, `2.6` dan heading BAB 4), 1 heading berspasi **depan** (`Teknik Analisis Data` — satu-satunya dari 41+ heading), judul `2.8 … Komentar Tiktok` menulis `Tiktok` padahal 82 kemunculan lain sudah `TikTok`, plus 5 paragraf prosa/halaman judul ikut berspasi. | ✅ **diperbaiki (ronde 10)** — 13 paragraf disentuh, seluruhnya murni whitespace + kapitalisasi. Penomoran 4.1–4.6 aman karena `numPr` hidup di **style**, dan entri DAFTAR ISI `2.8` ikut ter-regenerate otomatis. **Pemeriksanya** (`postchk.py`) ikut dikoreksi: ia mengecualikan caption dalam *text box* sehingga DAFTAR GAMBAR 10 dianggap ber-caption 9. |
 | 14 | **Dua cacat mikro teks.** (a) `Persamaan 2.4..` — titik ganda di akhir kalimat F1-score (Bab 2); (b) label `Responsivitas _Negatif` — satu-satunya dari 12 label `*_Negatif/*_Positif` yang berspasi sebelum `_`. | ✅ **diperbaiki (ronde 11)** — titik-ganda → satu titik; label → `Responsivitas_Negatif` konsisten dengan saudaranya. Kata 25.892 → 25.891 karena dua token bergabung setelah spasi dibuang. Sapuan luas ikut membuktikan **bersih**: tanpa artefak teknis, tanpa `w:ins`/`w:del`/komentar, tanpa kalimat kembar, `saya/kami` hanya muncul di kutipan komentar & judul berita (data/sumber, bukan suara penulis). |
 | 15 | **Label `BAB 6 PENUTUP` di Sistematika Pembahasan (1.7)** — stempel lama; heading asli bab 6 kini `KESIMPULAN DAN SARAN` (p1690, gaya `Judul`), entri DAFTAR ISI pun `BAB 6 KESIMPULAN DAN SARAN`. Ini satu-satunya `PENUTUP` tersisa di seluruh dokumen; label bab 1–5 di bagian itu konsisten dengan heading aslinya. | ✅ **diperbaiki (ronde 12)** — run bold `PENUTUP` → `KESIMPULAN DAN SARAN` (run `BAB 6` + dua `w:tab` tak disentuh). Kata 25.891 → **25.893** (+2 kata). 99 halaman, 46 tabel, rasio field 3.00, xref 0 putus, sitasi 43/43, DAFTAR TABEL/GAMBAR 32=32 / 10=10. |
+| 16 | **Subbab 5.9.3 `Aspek Responsivitas` & 5.9.4 `Aspek Transparansi` kosong total** (hanya heading `Judul3` + paragraf `TeksIsi` kosong — sisa *scaffold*; tidak ada konten maupun tabel di antaranya). RCA memang tidak mungkin untuk kedua aspek itu (komentar 64 & 32, tanpa satu pun prediksi positif). **Catatan keterbatasan RCA** sekaligus berada di tempat salah: di puncak Bab 6, antara heading `BAB 6 KESIMPULAN DAN SARAN` dan 6.1. | ✅ **diperbaiki (ronde 13)** — dua subbab kosong dihapus (4 paragraf); `Kesimpulan Hasil Root Cause Analysis (RCA)` otomatis jadi **5.9.3**; catatan keterbatasan dipindah menjadi **penutup Bab 5** (tepat sebelum heading BAB 6), jadi Bab 6 langsung dibuka 6.1 Kesimpulan. Kata 25.893→**25.879**; halaman tetap 99; PAGEREF 145→143 (2 entri TOC ikut hilang), instrText 192, fldChar 576 (rasio 3.00), tidak ada kode field baru. |
 
 ### Koreksi atas laporan saya sebelumnya ❌
 
@@ -592,6 +593,35 @@ sudah diberi disclaimer benar di p481 ("satu proses pelatihan… belum dapat dij
   salah sasaran karena caption RCA sudah lebih dulu diganti 4.6 → 4.5 sehingga
   ada dua tabel "Algoritme 4.5" dan loop mengambil kecocokan terakhir. Dipulihkan
   dari backup `work/pre_hapus_4647.docx`, seleksi diganti berdasar *judul* caption.
+
+### Ronde 13 — subbab RCA kosong dihapus, catatan keterbatasan dipindah ✅
+
+- **Dua subbab hasil yang kosong total** dihilangkan: **5.9.3 `Aspek
+  Responsivitas`** dan **5.9.4 `Aspek Transparansi`** — masing-masing hanya
+  berisi heading `Judul3` + satu paragraf `TeksIsi` kosong (`p1685–1688`);
+  verifikasi membuktikan **tidak ada konten maupun tabel** di antara keduanya
+  (semua anak `body` justru berurutan: heading, kosong, heading, kosong,
+  `Kesimpulan Hasil RCA`, …, `BAB 6`). Ini sisa *scaffold* — RCA memang tak
+  mungkin ditelusuri untuk kedua aspek itu: komentar negatifnya hanya **64 dan
+  32**, dan model tidak memproduksi satu pun prediksi sentimen positif
+  (F1 0,00% pada seluruh kelas positif). Penjelasan ini sudah ada di
+  **Catatan keterbatasan hasil RCA**; subbab kosongnya tidak menambah apa-apa.
+- **Catatan itu juga letaknya salah**: di puncak Bab 6 — antara heading
+  `BAB 6 KESIMPULAN DAN SARAN` dan `6.1 Kesimpulan` — padahal substansinya
+  tentang hasil 5.9. Kini dipindah menjadi **penutup Bab 5** (paragraf terakhir,
+  tepat sebelum heading `BAB 6`), sehingga Bab 6 dibuka langsung oleh 6.1.
+- Karena penomoran subbab hidup di **style** `Judul3`, `Kesimpulan Hasil Root
+  Cause Analysis (RCA)` otomatis **renumber 5.9.5 → 5.9.3** (terbukti di entri
+  DAFTAR ISI: `5.9.1`, `5.9.2`, `5.9.3` — tidak ada sisa `5.9.4`/`5.9.5`).
+- Dampak field **wajar dan tercatat**: 2 entri TOC untuk subbab yang dihapus
+  turut hilang → `PAGEREF` 145→**143**, `instrText` 194→**192**, `fldChar`
+  582→**576** (rasio tetap 3.00); pemeriksaan membuktikan **tidak ada satu pun
+  kode field baru** (subset HEAD), semua 143 `PAGEREF` tetap ter-resolve,
+  pasangan `bookmarkStart`/`bookmarkEnd` tetap seimbang.
+- Hasil: **99 halaman, 25.879 kata** (−14: 4 kata heading + ~10 kata entri TOC),
+  1.744 paragraf, 46 tabel, 0 error field, rujukan silang **0 putus**, sitasi
+  **43/43**, DAFTAR TABEL/GAMBAR **32=32 / 10=10**, 47 caption **0 yatim**,
+  1.228 italic & 2 penanda `EE0000` tampak identik.
 
 ### Ronde 12 — label Sistematika Pembahasan Bab 6 disinkronkan ✅
 
@@ -805,9 +835,8 @@ sudah diberi disclaimer benar di p481 ("satu proses pelatihan… belum dapat dij
 
 ---
 
-*Terakhir disesuaikan pada ronde 12 (label Sistematika Pembahasan bab 6
-`BAB 6 PENUTUP` → `BAB 6 KESIMPULAN DAN SARAN`, konsisten dgn heading & DAFTAR
-ISI; struktur heading bab yang beda-mekanisme antara `Judul1` dan `Judul` dicatat
-sebagai bukan cacat) dengan berkas `Mulai Revisi RCA BARU_..._REVISI.docx`
-(99 halaman, 25.893 kata, 6 subbab di Bab 4, ABSTRAK 204 kata).*
+*Terakhir disesuaikan pada ronde 13 (dua subbab RCA kosong 5.9.3/5.9.4 dihapus,
+`Kesimpulan Hasil RCA` jadi 5.9.3, catatan keterbatasan dipindah ke penutup Bab 5,
+Bab 6 dibuka langsung oleh 6.1) dengan berkas `Mulai Revisi RCA BARU_..._REVISI.docx`
+(99 halaman, 25.879 kata, 6 subbab di Bab 4, ABSTRAK 204 kata).*
 *Commit pipeline tetap `703d9c4` — kode IndoBERT tidak diubah.*
