@@ -505,6 +505,7 @@ Satu per satu:
 | 8 | **Subbab 4.6 tanpa objek pendukung.** Satu-satunya subbab metode tanpa tabel/algoritme, padahal di situ inti koreksi *leakage*-nya. | ✅ **selesai lewat penghapusan** — 4.6 dan 4.7 dihapus, jadi isu ini kedaluwarsa. Bab 4.6 baru (RCA) punya Tabel 4.9 + Algoritme 4.5. Inti koreksi *leakage* tetap dijelaskan di Bab 3.5.3 dan dilaporkan di 5.6. Tidak perlu Algoritme baru dari `predict_absa_oof.py`. |
 | 9 | **Coding manual hanya 4 dari 8 kelas** (hanya negatif). | ✅ **diperjelas** — pengodean eksplisit hanya pada komentar **bersentimen negatif** per aspek (Bab 3.5.4 dan 5.8.3); tabel distribusi 8 kelas kini sepenuhnya di Bab 5 (Tabel 5.10–5.14), sebab Bab 4 tidak lagi memuat tabel hasil. |
 | 10 | **Tahap 7–8 (koding tematik) tidak dipakai** di skripsi. | ℹ️ info — tidak masalah, asal laporan konsisten menyebut metode yang benar-benar dilaporkan. |
+| 11 | **12 dari 43 referensi (28%) tidak pernah disitasi** di seluruh badan teks — cacat yang lazim diperiksa penguji. | ✅ **diperbaiki (ronde 8)** — kesemuanya disitakan di titik paling cocok (Bab 1.1, Bab 2 ×4, RCA ×2), semua sumber memenuhi syarat penulis: dari Indonesia, terbit ≥ 2021. Kini **43/43 disitasi**; arah sebaliknya sudah bersih, dan `(Sinuraya, 2004)` dipastikan kutipan sekunder yang memang tidak boleh didaftar. |
 
 ### Koreksi atas laporan saya sebelumnya ❌
 
@@ -588,6 +589,47 @@ sudah diberi disclaimer benar di p481 ("satu proses pelatihan… belum dapat dij
   ada dua tabel "Algoritme 4.5" dan loop mengambil kecocokan terakhir. Dipulihkan
   dari backup `work/pre_hapus_4647.docx`, seleksi diganti berdasar *judul* caption.
 
+### Ronde 8 — 12 referensi tak pernah disitasi ✅
+
+- **Temuan lewat pemeriksaan dua arah** (sitasi in-text ↔ Daftar Referensi):
+  dari 43 entri, **12 (28%) tidak pernah muncul sama sekali di badan teks**.
+  Angka ini diambil dengan pencocokan ternormalisasi (hapus spasi/bacaan tanda
+  baca) supaya "detik Kalimantan" vs "detikKalimantan" tidak dihitung lolos.
+- **Arah sebaliknya bersih** — tidak ada sitasi yang tanpa entri. Satu-satunya
+  kandidat `(Sinuraya, 2004)` ternyata **kutipan sekunder yang sah**:
+  "Menurut Nurhidayat (2023), yang mengutip Simamungsong dan Sinuraya (2004)".
+  Menurut APA hanya sumber primer (Nurhidayat) yang didaftarkan, jadi daftar
+  memang tidak boleh memuat Simamungsong & Sinuraya.
+- **Syarat penulis: sumber dari Indonesia, penelitian minimal tahun 2021.**
+  Diverifikasi untuk keempat makalah: G-Tech Univ. Brawijaya (2024,
+  `ejournal.uniramalang.ac.id`), Gudang Jurnal Multidisiplin Ilmu (2024, DOI
+  `gjmi`), JINTEKS (2023), JAIC Polibatam (2024, `jurnal.polibatam.ac.id`) —
+  semuanya jurnal Indonesia. Delapan sisanya media Indonesia terbit 2026. Pemeriksaan
+  menyeluruh: **seluruh 43 referensi dokumen bertahun ≥ 2021**, tidak ada satu
+  pun di bawahnya.
+- **Titik sisipan** — semuanya menempelkan sumber yang **sudah ada di daftar**
+  ke kalimat yang **sudah ada**; tidak ada satu pun sumber yang dikarang:
+
+  | Sumber | Titik sisipan | Alasan kecocokan |
+  |---|---|---|
+  | Antara News, Kaltim Prov, Kaltimtoday, Katakaltim | Bab 1.1 "menjadi perhatian masyarakat" | kalimat ini sebelumnya **tidak bersumber sama sekali** |
+  | Irawan dkk. 2024; Nugroho & Amrullah 2023 | Bab 2 Cross Validation | keduanya memakai *cross validation* untuk evaluasi model sentimen / K-NN |
+  | Jabar dkk. 2024 | Bab 2 *Akuntabilitas* | judulnya persis "Akuntabilitas dan transparansi…" |
+  | Sejati dkk. 2024 | Bab 2 *ABSA* | ABSA pada komentar akun Kemenkeu |
+  | detikKalimantan; Sorot Mata | RCA Why 4 (Permendagri) | judulnya persis soal Permendagri sebagai dasar pengadaan |
+  | BeritaSatu; Otomotif Sindonews | RCA Why 2 (harga) | keduanya memuat angka Rp8,5 miliar |
+
+- **Teknik sisipan: run-level**, bukan menulis ulang paragraf — target ditunjuk
+  per indeks run. Pada Bab 2 (p345) sisipan pertama diletakkan *di dalam* run
+  polos sebelum run italic `machine learning`, dan sisipan kedua disisipkan di
+  depan run `.` — sehingga **1.171 run italic tetap identik** dan sitasi tidak
+  ikut miring. Penanda revisi `color=EE0000` identik (2), jumlah paragraf tetap
+  1.790 (hanya run yang bertambah), seluruh angka kunci identik.
+- Hasil: **43/43 referensi kini disitasi**, 99 halaman, 25.910 kata (+38 dari
+  12 sitasi), 0 error field, 0 rujukan putus (subbab 16, Tabel 59, Algoritme 9,
+  Gambar 14, Bab 24), inventaris field 194 `instrText` / 582 `fldChar`
+  (rasio 3.00 — tak berubah karena memang tidak ada heading/field baru).
+
 ### Yang sudah diperbaiki di ronde sebelumnya ✅
 
 - Semua "model terbaik / Fold 6" → **out-of-fold** (11 bagian, Bab 1–6).
@@ -599,6 +641,7 @@ sudah diberi disclaimer benar di p481 ("satu proses pelatihan… belum dapat dij
 
 ---
 
-*Terakhir disesuaikan pada ronde 4 (penghapusan subbab 4.6/4.7) dengan berkas
-`Mulai Revisi RCA BARU_..._REVISI.docx` (98 halaman, 6 subbab di Bab 4).*
+*Terakhir disesuaikan pada ronde 8 (12 referensi yang tak pernah disitasi kini
+disitasi — 43/43) dengan berkas `Mulai Revisi RCA BARU_..._REVISI.docx`
+(99 halaman, 25.910 kata, 6 subbab di Bab 4, ABSTRAK 204 kata).*
 *Commit pipeline tetap `703d9c4` — kode IndoBERT tidak diubah.*
