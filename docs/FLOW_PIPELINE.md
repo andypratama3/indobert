@@ -506,6 +506,7 @@ Satu per satu:
 | 9 | **Coding manual hanya 4 dari 8 kelas** (hanya negatif). | ✅ **diperjelas** — pengodean eksplisit hanya pada komentar **bersentimen negatif** per aspek (Bab 3.5.4 dan 5.8.3); tabel distribusi 8 kelas kini sepenuhnya di Bab 5 (Tabel 5.10–5.14), sebab Bab 4 tidak lagi memuat tabel hasil. |
 | 10 | **Tahap 7–8 (koding tematik) tidak dipakai** di skripsi. | ℹ️ info — tidak masalah, asal laporan konsisten menyebut metode yang benar-benar dilaporkan. |
 | 11 | **12 dari 43 referensi (28%) tidak pernah disitasi** di seluruh badan teks — cacat yang lazim diperiksa penguji. | ✅ **diperbaiki (ronde 8)** — kesemuanya disitakan di titik paling cocok (Bab 1.1, Bab 2 ×4, RCA ×2), semua sumber memenuhi syarat penulis: dari Indonesia, terbit ≥ 2021. Kini **43/43 disitasi**; arah sebaliknya sudah bersih, dan `(Sinuraya, 2004)` dipastikan kutipan sekunder yang memang tidak boleh didaftar. |
+| 12 | **Tabel RCA kosong 9 baris di ujung Bab 5** — label `Isu Kritis` / `Why 1–5` / `Akar Masalah` / `Rekomendasi` ada, tetapi kolom "Hasil Analisis" **seluruhnya kosong**, berborder `single` (terlihat), tanpa caption, diapit 20 paragraf kosong, tepat sebelum heading BAB 6. Ada juga di `work/original_backup.docx` (sisa *scaffold* penulis). | ✅ **dihapus (ronde 9)** — 21 node dibuang (tabel + caption `Keterangan` kosong + 20 paragraf kosong). Heading BAB 6 diberi **`pageBreakBefore` pada paragrafnya langsung**, bukan pada style: `Judul`/`Title` memang tidak punya `pageBreakBefore` dan tidak ada satu pun *page break* manual di dokumen, jadi sebelumnya Bab 6 hanya *"kebetulan"* mulai halaman baru karena 15 paragraf kosong itu. Gaya `Title` tidak disentuh → DAFTAR ISI aman. |
 
 ### Koreksi atas laporan saya sebelumnya ❌
 
@@ -589,6 +590,67 @@ sudah diberi disclaimer benar di p481 ("satu proses pelatihan… belum dapat dij
   ada dua tabel "Algoritme 4.5" dan loop mengambil kecocokan terakhir. Dipulihkan
   dari backup `work/pre_hapus_4647.docx`, seleksi diganti berdasar *judul* caption.
 
+### Ronde 9 — audit caption↔rujukan, aritmetika tabel, tabel kosong dihapus ✅
+
+- **Audit caption ↔ rujukan (dua arah) — bersih.** Dari 46 caption sejati
+  (32 Tabel + 9 Gambar + 5 Algoritme, gaya `Keterangan`/`SourceCode`), **0 yang
+  tak pernah dirujuk** di prosa. Sebaliknya, satu-satunya "rujukan tanpa caption"
+  adalah `Gambar 3.1` — **bukan cacat**: captionnya memang sengaja ada *di dalam*
+  kotak teks melayang (`Kotak Teks 1`), bukan paragraf biasa. Diverifikasi against
+  `work/original_backup.docx`: strukturnya **identik** (11 `a:blip`, caption-in-textbox
+  juga ada di versi asli), DAFTAR GAMBAR tetap memuatnya, dan prosa merujuknya 2×.
+  Menyentuhnya justru berisiko tinggi, jadi dibiarkan.
+  **Catatan alat**: caption memakai field `SEQ`, jadi teksnya `Tabel 4. 1`
+  (ada spasi) sementara rujukan prosa ditulis `Tabel 4.1` — RegEx pencocokan
+  wajib memakai `\d+\.\s*\d+`. Deteksi DAFTAR TABEL/GAMBAR juga harus dibatasi
+  *next heading* apa pun (`Judul1/2/3`, `DefaultHeading`, `Title`), kalau tidak
+  `DAFTAR GAMBAR` akan menelan sampai DAFTAR REFERENSI (1.413 "entri" palsu).
+- **Audit aritmetika seluruh tabel distribusi — semua lolos.** Pembulatan memakai
+  `ROUND_HALF_UP` seperti dokumen (rata-rata fold 77,625 → **77,63**; `round()`
+  Python memakai *banker's rounding* sehingga menghasilkan 77,62 dan sempat
+  dianggap selisih — itu bug pemeriksa, bukan dokumen):
+
+  | Pemeriksaan | Hasil |
+  |---|---|
+  | Tabel 5.2 / 5.3 / 5.4 (data latih) | 363+263+99+75 = 717+83 = 305+251+92+69+58+12+7+6 = **800** ✓ |
+  | Tabel 5.8 rata-rata 10 fold | **77,63 / 76,36 / 77,63 / 76,09** ✓ (identik Tabel 5.9) |
+  | Tabel 5.10 aspek prediksi | 636+299+64+32 = **1.031**; 61,69+29,00+6,21+3,10 = **100,00%** ✓ |
+  | Tabel 5.11 sentimen prediksi | 950+81 = **1.031**; 92,14+7,86 = **100,00%** ✓ |
+  | Tabel 5.12 silang | kolom (950, 81, 1.031) ✓ dan tiap baris neg+pos = total ✓ |
+  | Tabel 5.13 negatif per aspek | Σ 1.031 komentar, Σ 950 negatif; 559/636=87,89 · 295/299=98,66 · 64/64=100 · 32/32=100 ✓ |
+  | Tabel 5.15–5.18 kategori masalah | Σ = 559 / 295 / 64 / 32 ✓, Σ persen = 100% tiap tabel, tiap baris cocok hitung ulang ✓ |
+  | RCA vs kategori | 114/559 = 20,4% · 69/559 = 12,3% · 170/295 = 57,6% · 95/295 = 32,2% ✓ |
+
+  Silang aspek↔sentimen (Tabel 5.12) juga konsisten: 559+295+64+32 = **950**
+  negatif, 77+4+0+0 = **81** positif. Distribusi label latih Tabel 5.4
+  (305+251+92+69 = **717** negatif; 58+12+7+6 = **83** positif) cocok persis
+  dengan Tabel 5.3 (717/83) dan Tabel 5.2 per aspek (363/263/99/75 = 800).
+- **Satu temuan nyata: tabel RCA kosong 9 baris.** Berborder `single` (terlihat),
+  tanpa caption (`Keterangan`-nya pun kosong), diapit paragraf kosong, tepat sebelum
+  BAB 6 — dan **ada juga di `work/original_backup.docx`**, jadi memang sisa
+  *scaffold* penulis, bukan kerusakan suntingan. Dihapus bersama 20 paragraf
+  kosong pengisi (21 node).
+- **Paginasi Bab 6 dibuat deterministik.** Seluruh dokumen **tidak punya satu pun
+  *page break* manual** (`w:br type="page"` = 0), dan `Judul`/`Title` **tidak**
+  punya `pageBreakBefore` (hanya `Judul1` yang punya). Jadi Bab 6 selama ini cuma
+  kebetulan di halaman 91 karena 15 paragraf kosongnya. Kini `pageBreakBefore`
+  dipasang **langsung di paragraf heading** — mengubah *format langsung*, bukan
+  style, sehingga penomoran/DAFTAR ISI tidak tersentuh.
+- **Sitasi diverifikasi ulang secara independen**: `refcheck6.py` → **43/43
+  disitasi, 0 tak pernah disitasi, 0 sitasi tanpa entri** (`Sinuraya 2004` tetap
+  kutipan sekunder yang sah).
+- Hasil: **99 halaman, 25.892 kata** (−18 = persis jumlah kata 10 label tabel
+  yang dihapus), paragraf 1.790 → **1.752**, tabel 47 → **46**, 0 error field,
+  inventaris field **194 `instrText` / 582 `fldChar` (rasio 3.00 — tak berubah)**
+  (`TOC` 6 / `PAGEREF` 145 / `SEQ` 43), rujukan silang **0 putus** (subbab 16,
+  Tabel 59, Algoritme 9, Gambar 14, Bab 24), DAFTAR ISI 108 entri 0 terlalu
+  panjang, DAFTAR TABEL 32, DAFTAR GAMBAR 10, Bab IV 6 subbab, 5 Algoritme,
+  1.229 run italic identik, 2 penanda revisi `EE0000` identik.
+  Bandingan presisi ke `HEAD` memastikan **hanya** blok 10 label tabel
+  (`Tahap`, `Hasil Analisis`, `Isu Kritis`, `Why 1–5`, `Akar Masalah`,
+  `Rekomendasi`) yang hilang dari teks; 1.596 teks non-kosong lain identik
+  urutannya.
+
 ### Ronde 8 — 12 referensi tak pernah disitasi ✅
 
 - **Temuan lewat pemeriksaan dua arah** (sitasi in-text ↔ Daftar Referensi):
@@ -641,7 +703,8 @@ sudah diberi disclaimer benar di p481 ("satu proses pelatihan… belum dapat dij
 
 ---
 
-*Terakhir disesuaikan pada ronde 8 (12 referensi yang tak pernah disitasi kini
-disitasi — 43/43) dengan berkas `Mulai Revisi RCA BARU_..._REVISI.docx`
-(99 halaman, 25.910 kata, 6 subbab di Bab 4, ABSTRAK 204 kata).*
+*Terakhir disesuaikan pada ronde 9 (audit caption↔rujukan & aritmetika tabel
+lengkap — semua bersih; tabel RCA kosong 9 baris dihapus, paginasi Bab 6 dibuat
+deterministik) dengan berkas `Mulai Revisi RCA BARU_..._REVISI.docx`
+(99 halaman, 25.892 kata, 6 subbab di Bab 4, ABSTRAK 204 kata).*
 *Commit pipeline tetap `703d9c4` — kode IndoBERT tidak diubah.*
