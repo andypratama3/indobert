@@ -511,6 +511,7 @@ Satu per satu:
 | 14 | **Dua cacat mikro teks.** (a) `Persamaan 2.4..` — titik ganda di akhir kalimat F1-score (Bab 2); (b) label `Responsivitas _Negatif` — satu-satunya dari 12 label `*_Negatif/*_Positif` yang berspasi sebelum `_`. | ✅ **diperbaiki (ronde 11)** — titik-ganda → satu titik; label → `Responsivitas_Negatif` konsisten dengan saudaranya. Kata 25.892 → 25.891 karena dua token bergabung setelah spasi dibuang. Sapuan luas ikut membuktikan **bersih**: tanpa artefak teknis, tanpa `w:ins`/`w:del`/komentar, tanpa kalimat kembar, `saya/kami` hanya muncul di kutipan komentar & judul berita (data/sumber, bukan suara penulis). |
 | 15 | **Label `BAB 6 PENUTUP` di Sistematika Pembahasan (1.7)** — stempel lama; heading asli bab 6 kini `KESIMPULAN DAN SARAN` (p1690, gaya `Judul`), entri DAFTAR ISI pun `BAB 6 KESIMPULAN DAN SARAN`. Ini satu-satunya `PENUTUP` tersisa di seluruh dokumen; label bab 1–5 di bagian itu konsisten dengan heading aslinya. | ✅ **diperbaiki (ronde 12)** — run bold `PENUTUP` → `KESIMPULAN DAN SARAN` (run `BAB 6` + dua `w:tab` tak disentuh). Kata 25.891 → **25.893** (+2 kata). 99 halaman, 46 tabel, rasio field 3.00, xref 0 putus, sitasi 43/43, DAFTAR TABEL/GAMBAR 32=32 / 10=10. |
 | 16 | **Subbab 5.9.3 `Aspek Responsivitas` & 5.9.4 `Aspek Transparansi` kosong total** (hanya heading `Judul3` + paragraf `TeksIsi` kosong — sisa *scaffold*; tidak ada konten maupun tabel di antaranya). RCA memang tidak mungkin untuk kedua aspek itu (komentar 64 & 32, tanpa satu pun prediksi positif). **Catatan keterbatasan RCA** sekaligus berada di tempat salah: di puncak Bab 6, antara heading `BAB 6 KESIMPULAN DAN SARAN` dan 6.1. | ✅ **diperbaiki (ronde 13)** — dua subbab kosong dihapus (4 paragraf); `Kesimpulan Hasil Root Cause Analysis (RCA)` otomatis jadi **5.9.3**; catatan keterbatasan dipindah menjadi **penutup Bab 5** (tepat sebelum heading BAB 6), jadi Bab 6 langsung dibuka 6.1 Kesimpulan. Kata 25.893→**25.879**; halaman tetap 99; PAGEREF 145→143 (2 entri TOC ikut hilang), instrText 192, fldChar 576 (rasio 3.00), tidak ada kode field baru. |
+| 17 | **Blok 26 paragraf kosong (scaffold) di front matter sebelum BAB 1** — antara entri terakhir DAFTAR GAMBAR (`Gambar 5.9 Distribusi Sentimen Negatif per Aspek`) dan heading `PENDAHULUAN`; sebenarnya 27 paragraf kosong, 1 di antaranya (yang tepat di depan BAB 1) memuat `fldChar(end)` penutup field DAFTAR GAMBAR sehingga **tidak boleh dihapus**. Pergantian halaman BAB 1 dijamin *pageBreakBefore* pada **style** `Judul1` (terverifikasi di `styles.xml`; begitu pula `DefaultHeading` untuk ABSTRAK/DAFTAR ISI/TABEL/GAMBAR), jadi blok kosong itu tidak berfungsi apa pun selain menambah area kosong (malah memicu 1 halaman overshoot di front matter). | ✅ **diperbaiki (ronde 14)** — 26 paragraf kosong dihapus, paragraf pembawa `fldChar(end)` dipertahankan; BAB 1 kini langsung menyusul entri DAFTAR GAMBAR terakhir. Halaman **99→98**, kata tetap 25.879; field **0 kode baru/0 hilang** vs HEAD (TOC 6, PAGEREF 143, SEQ 43, instrText 192, fldChar 576); DAFTAR TABEL/GAMBAR tetap 32=32/10=10, xref 0 putus, sitasi 43/43. Blok 40-paragraf di sekitar Gambar 3.1 (reservoir anchor gambar melayang) dan spacer kecil tabel sengaja tidak disentuh. |
 
 ### Koreksi atas laporan saya sebelumnya ❌
 
@@ -593,6 +594,36 @@ sudah diberi disclaimer benar di p481 ("satu proses pelatihan… belum dapat dij
   salah sasaran karena caption RCA sudah lebih dulu diganti 4.6 → 4.5 sehingga
   ada dua tabel "Algoritme 4.5" dan loop mengambil kecocokan terakhir. Dipulihkan
   dari backup `work/pre_hapus_4647.docx`, seleksi diganti berdasar *judul* caption.
+
+### Ronde 14 — scaffold paragraf kosong front matter dihapus (BAB 1) ✅
+
+- **Blok 26 paragraf kosong** di front matter — persis di antara entri terakhir
+  DAFTAR GAMBAR dan heading `PENDAHULUAN` (BAB 1) — dihapus. Audit mekanisme
+  pergantian halaman membuktikan: dokumen **satu seksi** (satu `sectPr`), tanpa
+  `pageBreakBefore` langsung di paragraf mana pun kecuali BAB 6, tetapi **style
+  `Judul1` dan `DefaultHeading` memuat `w:pageBreakBefore`** — artinya semua bab
+  dan halaman depan (ABSTRAK, DAFTAR ISI/TABEL/GAMBAR) tetap mulai di halaman baru
+  meski blok kosong itu hilang. Blok hanya menciptakan ekor kosong / kelebihan
+  1 halaman di akhir front matter.
+- **Satu dari 27 paragraf "kosong" itu dipertahankan**: paragraf terakhir (tepat
+  di depan BAB 1) memuat `fldChar(end)` — penutup field DAFTAR GAMBAR (TOF).
+  Menghapusnya akan merusak struktur field; karenanya ia dibiarkan sebagai satu
+  baris tak terlihat (instrText 192 dan fldChar 576 **tidak berubah**).
+- `bmchk` ditarik-naik menjadi toleran baseline: verifikasi resep berubah menjadi
+  «tak ada kode field baru; yang hilang hanya entri PAGEREF konten yang memang
+  dihapus (ronde 13)» — ronde 14 menyumbang **0 hilang / 0 baru**.
+- Dampak: **99 → 98 halaman** (kelebihan 1 halaman kosong front matter hilang),
+  kata tetap **25.879**, tabel 46, xref **0 putus**, sitasi **43/43**, DAFTAR
+  TABEL/GAMBAR **32=32 / 10=10**, 1.228 italic & 2 penanda `EE0000`.
+- **Sengaja tidak disentuh**: blok 40 paragraf kosong di sekitar Gambar 3.1
+  (reservoir *anchor* gambar melayang — menghapusnya bisa menggeser/melepas
+  gambar), blok 2-kosong antar-item daftar metrik evaluasi di Bab 2, spacer kecil
+  sebelum caption Tabel 4.1/4.6 dan heading Kesimpulan Hasil RCA (spasi
+  tipografi, bukan cacat), serta DAFTAR REFERENSI yang memang mengikuti
+  alur-natural (di ORIG pun tak ada pemisah — TOC 94 vs Saran 92, identik pola
+  asli 95/93).
+- Rendering: BAB 1 tetap mulai di halaman baru (style), front matter berakhir
+  rapi tepat setelah entri DAFTAR GAMBAR terakhir.
 
 ### Ronde 13 — subbab RCA kosong dihapus, catatan keterbatasan dipindah ✅
 
@@ -835,8 +866,11 @@ sudah diberi disclaimer benar di p481 ("satu proses pelatihan… belum dapat dij
 
 ---
 
-*Terakhir disesuaikan pada ronde 13 (dua subbab RCA kosong 5.9.3/5.9.4 dihapus,
-`Kesimpulan Hasil RCA` jadi 5.9.3, catatan keterbatasan dipindah ke penutup Bab 5,
-Bab 6 dibuka langsung oleh 6.1) dengan berkas `Mulai Revisi RCA BARU_..._REVISI.docx`
-(99 halaman, 25.879 kata, 6 subbab di Bab 4, ABSTRAK 204 kata).*
+*Terakhir disesuaikan pada ronde 14 (blok 26 paragraf kosong scaffold di front
+matter sebelum BAB 1 dihapus — halaman 99→98; paragraf pembawa `fldChar(end)`
+penutup field DAFTAR GAMBAR tetap dipertahankan) dan ronde 13 (dua subbab RCA
+kosong 5.9.3/5.9.4 dihapus, `Kesimpulan Hasil RCA` jadi 5.9.3, catatan
+keterbatasan dipindah ke penutup Bab 5, Bab 6 dibuka langsung oleh 6.1) dengan
+berkas `Mulai Revisi RCA BARU_..._REVISI.docx`
+(98 halaman, 25.879 kata, 6 subbab di Bab 4, ABSTRAK 204 kata).*
 *Commit pipeline tetap `703d9c4` — kode IndoBERT tidak diubah.*
