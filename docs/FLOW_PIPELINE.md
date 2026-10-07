@@ -509,6 +509,7 @@ Satu per satu:
 | 12 | **Tabel RCA kosong 9 baris di ujung Bab 5** — label `Isu Kritis` / `Why 1–5` / `Akar Masalah` / `Rekomendasi` ada, tetapi kolom "Hasil Analisis" **seluruhnya kosong**, berborder `single` (terlihat), tanpa caption, diapit 20 paragraf kosong, tepat sebelum heading BAB 6. Ada juga di `work/original_backup.docx` (sisa *scaffold* penulis). | ✅ **dihapus (ronde 9)** — 21 node dibuang (tabel + caption `Keterangan` kosong + 20 paragraf kosong). Heading BAB 6 diberi **`pageBreakBefore` pada paragrafnya langsung**, bukan pada style: `Judul`/`Title` memang tidak punya `pageBreakBefore` dan tidak ada satu pun *page break* manual di dokumen, jadi sebelumnya Bab 6 hanya *"kebetulan"* mulai halaman baru karena 15 paragraf kosong itu. Gaya `Title` tidak disentuh → DAFTAR ISI aman. |
 | 13 | **Spasi nyasar di heading + kapitalisasi `Tiktok`.** 6 heading berspasi **ekor** (`2.2`, `2.3`, `2.4`, `2.5`, `2.6` dan heading BAB 4), 1 heading berspasi **depan** (`Teknik Analisis Data` — satu-satunya dari 41+ heading), judul `2.8 … Komentar Tiktok` menulis `Tiktok` padahal 82 kemunculan lain sudah `TikTok`, plus 5 paragraf prosa/halaman judul ikut berspasi. | ✅ **diperbaiki (ronde 10)** — 13 paragraf disentuh, seluruhnya murni whitespace + kapitalisasi. Penomoran 4.1–4.6 aman karena `numPr` hidup di **style**, dan entri DAFTAR ISI `2.8` ikut ter-regenerate otomatis. **Pemeriksanya** (`postchk.py`) ikut dikoreksi: ia mengecualikan caption dalam *text box* sehingga DAFTAR GAMBAR 10 dianggap ber-caption 9. |
 | 14 | **Dua cacat mikro teks.** (a) `Persamaan 2.4..` — titik ganda di akhir kalimat F1-score (Bab 2); (b) label `Responsivitas _Negatif` — satu-satunya dari 12 label `*_Negatif/*_Positif` yang berspasi sebelum `_`. | ✅ **diperbaiki (ronde 11)** — titik-ganda → satu titik; label → `Responsivitas_Negatif` konsisten dengan saudaranya. Kata 25.892 → 25.891 karena dua token bergabung setelah spasi dibuang. Sapuan luas ikut membuktikan **bersih**: tanpa artefak teknis, tanpa `w:ins`/`w:del`/komentar, tanpa kalimat kembar, `saya/kami` hanya muncul di kutipan komentar & judul berita (data/sumber, bukan suara penulis). |
+| 15 | **Label `BAB 6 PENUTUP` di Sistematika Pembahasan (1.7)** — stempel lama; heading asli bab 6 kini `KESIMPULAN DAN SARAN` (p1690, gaya `Judul`), entri DAFTAR ISI pun `BAB 6 KESIMPULAN DAN SARAN`. Ini satu-satunya `PENUTUP` tersisa di seluruh dokumen; label bab 1–5 di bagian itu konsisten dengan heading aslinya. | ✅ **diperbaiki (ronde 12)** — run bold `PENUTUP` → `KESIMPULAN DAN SARAN` (run `BAB 6` + dua `w:tab` tak disentuh). Kata 25.891 → **25.893** (+2 kata). 99 halaman, 46 tabel, rasio field 3.00, xref 0 putus, sitasi 43/43, DAFTAR TABEL/GAMBAR 32=32 / 10=10. |
 
 ### Koreksi atas laporan saya sebelumnya ❌
 
@@ -591,6 +592,31 @@ sudah diberi disclaimer benar di p481 ("satu proses pelatihan… belum dapat dij
   salah sasaran karena caption RCA sudah lebih dulu diganti 4.6 → 4.5 sehingga
   ada dua tabel "Algoritme 4.5" dan loop mengambil kecocokan terakhir. Dipulihkan
   dari backup `work/pre_hapus_4647.docx`, seleksi diganti berdasar *judul* caption.
+
+### Ronde 12 — label Sistematika Pembahasan Bab 6 disinkronkan ✅
+
+- **Pemeriksaan konsistensi Bab 1 ↔ Bab 6** (permintaan "terus perbaiki sampai
+  benar-benar baik") menemukan satu cacat nyata: pada bagian **Sistematika
+  Pembahasan (1.7)** dokumen mendaftarkan bab 6 sebagai **`BAB 6 PENUTUP`**,
+  padahal heading asli bab 6 adalah **`BAB 6 KESIMPULAN DAN SARAN`** (p1690,
+  gaya `Judul` + `pageBreakBefore`), entri DAFTAR ISI pun `BAB 6 KESIMPULAN DAN
+  SARAN`. Penelusuran `PENUTUP` ke seluruh dokumen: **hanya tersisa 1** — label
+  di Sistematika ini. Label Sistematika bab 1–5 (dengan pemisah dua `w:tab`)
+  sudah cocok dengan heading `Judul1` aslinya (`PENDAHULUAN`, `LANDASAN
+  KEPUSTAKAAN`, `METODOLOGI PENELITIAN`, `PENGOLAHAN DATA DAN IMPLEMENTASI
+  METODE`, `HASIL PENELITIAN DAN PEMBAHASAN`).
+- **Catatan struktur heading bab**: bab 1–5 memakai gaya `Judul1` berisi judul
+  saja (mis. `PENDAHULUAN`); awalan "BAB n" dirender oleh penomoran
+  style/numbering — bukan teks. Bab 6 yang unik memakai gaya `Judul` dengan teks
+  lengkap `BAB 6 KESIMPULAN DAN SARAN`. Di layar dan di DAFTAR ISI hasilnya
+  konsisten, jadi mekanisme berbeda itu **bukan cacat** dan tidak disentuh.
+- **Perbaikan**: hanya run bold `PENUTUP` → `KESIMPULAN DAN SARAN` pada paragraf
+  Sistematika (run `BAB 6` dan dua `w:tab` tidak tersentuh). Deskripsi bab 6
+  ("Bab ini berisi kesimpulan…saran…") memang sudah benar.
+- Hasil: **99 halaman, 25.893 kata** (+2 kata), 1.750 paragraf, 46 tabel, 0 error
+  field, inventaris **194 `instrText` / 582 `fldChar` (rasio 3.00)**, rujukan
+  silang **0 putus**, sitasi **43/43**, DAFTAR TABEL/GAMBAR **32=32 / 10=10**,
+  italic & `EE0000` tampak identik, selisih teks vs `HEAD` **persis 1 paragraf**.
 
 ### Ronde 11 — dua cacat mikro teks (titik ganda & label berspasi) ✅
 
@@ -779,9 +805,9 @@ sudah diberi disclaimer benar di p481 ("satu proses pelatihan… belum dapat dij
 
 ---
 
-*Terakhir disesuaikan pada ronde 11 (dua cacat mikro: `Persamaan 2.4..` →
-`Persamaan 2.4.` dan label `Responsivitas _Negatif` → `Responsivitas_Negatif`;
-sapuan luas menyisakan nihil — tanpa jejak revisi, tanpa kalimat kembar, tanpa
-artefak teknis) dengan berkas `Mulai Revisi RCA BARU_..._REVISI.docx`
-(99 halaman, 25.891 kata, 6 subbab di Bab 4, ABSTRAK 204 kata).*
+*Terakhir disesuaikan pada ronde 12 (label Sistematika Pembahasan bab 6
+`BAB 6 PENUTUP` → `BAB 6 KESIMPULAN DAN SARAN`, konsisten dgn heading & DAFTAR
+ISI; struktur heading bab yang beda-mekanisme antara `Judul1` dan `Judul` dicatat
+sebagai bukan cacat) dengan berkas `Mulai Revisi RCA BARU_..._REVISI.docx`
+(99 halaman, 25.893 kata, 6 subbab di Bab 4, ABSTRAK 204 kata).*
 *Commit pipeline tetap `703d9c4` — kode IndoBERT tidak diubah.*
