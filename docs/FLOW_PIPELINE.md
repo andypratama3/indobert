@@ -558,16 +558,31 @@ sudah diberi disclaimer benar di p481 ("satu proses pelatihan… belum dapat dij
   Paragraf tepat sebelum SDT yang memuat field TOC memakai style
   `DefaultHeading` (bold + caps + 16pt + rata tengah + `pageBreakBefore` +
   `outlineLvl=0`, identik dengan style heading `DAFTAR TABEL`) tetapi teksnya
-  hanya satu spasi. Diisi `DAFTAR ISI`; kini menjadi entri pertama daftar isi
-  (`DAFTAR ISI 2`), konsisten dengan `DAFTAR TABEL 5` dan `DAFTAR GAMBAR 7`
-  yang memang sudah tercantum di TOC.
-- Hasil: **98 halaman**, 0 error field, 0 rujukan putus (subbab 16, Tabel 59,
-  Algoritme 9, Gambar 14, Bab 24). Inventaris field XML = 193 `instrText` /
-  579 `fldChar` (rasio 3.00). **Catatan alat**: counter `Fields.Count` dari
-  Word COM (pernah melapor 380 lalu 378) **tidak stabil** karena bergantung
-  pada apakah TOC sudah diregenerasi ketika dokumen dibuka — jangan dipakai
-  sebagai penanda regresi; inventaris `instrText`/`fldChar` di XML yang
-  dipakai sebagai rujukan.
+  hanya satu spasi. Diisi `DAFTAR ISI`.
+- **Skripsi tidak punya Abstrak sama sekali** — diverifikasi pada ketiga
+  versi (non-REVISI, REVISI, `work/original_backup.docx`): literal
+  `abstrak`/`kata kunci:` = 0, dan antara halaman judul dengan heading
+  `DAFTAR ISI` hanya berisi paragraf kosong. Dituliskan **ABSTRAK (204
+  kata) + Kata Kunci**, disisipkan tepat sebelum `DAFTAR ISI` (urutan baku
+  judul → abstrak → daftar isi) memakai style `DefaultHeading`, sehingga
+  mendapat halaman sendiri dan otomatis tercantum di daftar isi.
+  **Semua angka diambil dari tabel, bukan dari ingatan**: Tabel 5.9
+  (Accuracy 77,63 / Precision 76,36 / Recall 77,63 / F1 76,09), Tabel 5.10
+  (Akuntabilitas 636 = 61,69%), Tabel 5.11 (950 = 92,14% negatif), serta
+  1.081 → 800 → 1.031; seluruhnya diverifikasi aritmetika (636+299+64+32
+  = 1.031; 950+81 = 1.031). **Sengaja TIDAK membuat** halaman Pengesahan /
+  Pernyataan Keaslian — keduanya butuh nama dan tanda tangan pembimbing
+  yang nyata.
+- Hasil: **99 halaman** (98 + 1 halaman abstrak), 0 error field, 0 rujukan
+  putus (subbab 16, Tabel 59, Algoritme 9, Gambar 14, Bab 24). Inventaris
+  field XML = 194 `instrText` / 582 `fldChar` (rasio 3.00; +1 PAGEREF dari
+  entri `ABSTRAK` yang baru). Awal daftar isi kini `ABSTRAK 2`,
+  `DAFTAR ISI 3`, `DAFTAR TABEL 6`, `DAFTAR GAMBAR 8`, `BAB 1 PENDAHULUAN 10`.
+  **Catatan alat**: counter `Fields.Count` dari Word COM (pernah melapor
+  380 lalu 378) **tidak stabil** karena bergantung pada apakah TOC sudah
+  diregenerasi ketika dokumen dibuka — jangan dipakai sebagai penanda
+  regresi; inventaris `instrText`/`fldChar` di XML yang dipakai sebagai
+  rujukan.
 - Bug yang ditemukan dan diperbaiki saat pengerjaan: penghapusan tabel sempat
   salah sasaran karena caption RCA sudah lebih dulu diganti 4.6 → 4.5 sehingga
   ada dua tabel "Algoritme 4.5" dan loop mengambil kecocokan terakhir. Dipulihkan
