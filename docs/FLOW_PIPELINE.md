@@ -507,6 +507,7 @@ Satu per satu:
 | 10 | **Tahap 7–8 (koding tematik) tidak dipakai** di skripsi. | ℹ️ info — tidak masalah, asal laporan konsisten menyebut metode yang benar-benar dilaporkan. |
 | 11 | **12 dari 43 referensi (28%) tidak pernah disitasi** di seluruh badan teks — cacat yang lazim diperiksa penguji. | ✅ **diperbaiki (ronde 8)** — kesemuanya disitakan di titik paling cocok (Bab 1.1, Bab 2 ×4, RCA ×2), semua sumber memenuhi syarat penulis: dari Indonesia, terbit ≥ 2021. Kini **43/43 disitasi**; arah sebaliknya sudah bersih, dan `(Sinuraya, 2004)` dipastikan kutipan sekunder yang memang tidak boleh didaftar. |
 | 12 | **Tabel RCA kosong 9 baris di ujung Bab 5** — label `Isu Kritis` / `Why 1–5` / `Akar Masalah` / `Rekomendasi` ada, tetapi kolom "Hasil Analisis" **seluruhnya kosong**, berborder `single` (terlihat), tanpa caption, diapit 20 paragraf kosong, tepat sebelum heading BAB 6. Ada juga di `work/original_backup.docx` (sisa *scaffold* penulis). | ✅ **dihapus (ronde 9)** — 21 node dibuang (tabel + caption `Keterangan` kosong + 20 paragraf kosong). Heading BAB 6 diberi **`pageBreakBefore` pada paragrafnya langsung**, bukan pada style: `Judul`/`Title` memang tidak punya `pageBreakBefore` dan tidak ada satu pun *page break* manual di dokumen, jadi sebelumnya Bab 6 hanya *"kebetulan"* mulai halaman baru karena 15 paragraf kosong itu. Gaya `Title` tidak disentuh → DAFTAR ISI aman. |
+| 13 | **Spasi nyasar di heading + kapitalisasi `Tiktok`.** 6 heading berspasi **ekor** (`2.2`, `2.3`, `2.4`, `2.5`, `2.6` dan heading BAB 4), 1 heading berspasi **depan** (`Teknik Analisis Data` — satu-satunya dari 41+ heading), judul `2.8 … Komentar Tiktok` menulis `Tiktok` padahal 82 kemunculan lain sudah `TikTok`, plus 5 paragraf prosa/halaman judul ikut berspasi. | ✅ **diperbaiki (ronde 10)** — 13 paragraf disentuh, seluruhnya murni whitespace + kapitalisasi. Penomoran 4.1–4.6 aman karena `numPr` hidup di **style**, dan entri DAFTAR ISI `2.8` ikut ter-regenerate otomatis. **Pemeriksanya** (`postchk.py`) ikut dikoreksi: ia mengecualikan caption dalam *text box* sehingga DAFTAR GAMBAR 10 dianggap ber-caption 9. |
 
 ### Koreksi atas laporan saya sebelumnya ❌
 
@@ -589,6 +590,52 @@ sudah diberi disclaimer benar di p481 ("satu proses pelatihan… belum dapat dij
   salah sasaran karena caption RCA sudah lebih dulu diganti 4.6 → 4.5 sehingga
   ada dua tabel "Algoritme 4.5" dan loop mengambil kecocokan terakhir. Dipulihkan
   dari backup `work/pre_hapus_4647.docx`, seleksi diganti berdasar *judul* caption.
+
+### Ronde 10 — spasi nyasar di heading, kapitalisasi TikTok, pemeriksa caption diperbaiki ✅
+
+- **13 paragraf dibersihkan — seluruhnya murni whitespace + kapitalisasi,**
+  tidak ada satu pun perubahan substansi:
+
+  | # | Sasaran | Sebelum → sesudah |
+  |---|---|---|
+  | 1–6 | heading spasi **ekor** (`2.2` NLP, `2.3` ABSA, `2.4` IndoBERT, `2.5` Fine-Tuning, `2.6` Hybrid Annotation, heading **BAB 4**) | `'…Sentimen '` → `'…Sentimen'` dll. |
+  | 7 | heading `Teknik Analisis Data` — spasi **depan**, satu-satunya dari 41+ heading | `'  Teknik…'` → `'Teknik…'` |
+  | 8 | judul `2.8` | `'…Komentar Tiktok'` → `'…Komentar TikTok'` |
+  | 9–13 | `DEPARTEMEN SISTEM INFORMASI ` + 4 paragraf isi (flowchart, Algoritme 4.2, gambaran permasalahan, Tabel 5.15) | spasi ekor (dan depan bila ada) dibuang |
+
+- **Mengapa aman.** Spasinya terbukti berupa run `w:t` literal, **bukan `w:tab`**,
+  jadi menghapus run-nya tidak mengubah struktur paragraf. `pPr` keenam heading
+  hanya berisi `pStyle` (tiga di antaranya plus `ind`), dan **`numPr` hidup di
+  style** `Judul2`/`numId=5` — bukan di paragraf — sehingga penomoran 4.1–4.6
+  sama sekali tidak tersentuh. Karena itu pula suntingan teks heading tidak
+  berpengaruh ke penomoran.
+- **DAFTAR ISI ikut ter-regenerate.** Satu-satunya perubahan isi di luar 13 edit
+  adalah entri TOC `2.8` yang otomatis mengikuti (`Tiktok` → `TikTok`, nomor halaman
+  30 tetap). Pada tingkat field, **hanya nama bookmark tersembunyi `_Toc*` yang
+  di-*rebuild* Word** — setelah dinormalkan (`_Toc\d+` → `_TocN`), 194 `instrText`
+  **identik**; jenis & jumlah tak berubah (`TOC` 6 / `PAGEREF` 145 / `SEQ` 43),
+  rasio `fldChar` tetap **3.00**. Semua **145 `PAGEREF` punya pasangan
+  `bookmarkStart`** (0 yatim) dan pasangan ID `bookmarkStart`/`bookmarkEnd`
+  seimbang **185/185**.
+- **Pemeriksanya yang dikoreksi, bukan dokumennya.** `postchk.py` semula
+  mengecualikan paragraf di dalam *text box*, sehingga caption `Gambar 3.1`
+  (memang sengaja di dalam kotak melayang — layout asli penulis) tak terhitung dan
+  DAFTAR GAMBAR (10 entri) gagal disandingkan dengan caption 9. Kini caption dalam
+  kotak ikut dihitung → **47 caption, 0 tak pernah dirujuk, 0 rujukan yatim**,
+  DAFTAR TABEL **32 = 32**, DAFTAR GAMBAR **10 = 10**. Perbaikan kedua: pemeriksa
+  teks semula ikut mengumpulkan kode field `w:instrText` sehingga melaporkan 19
+  blok perubahan; setelah dibatasi ke `w:t` terlihat, hasilnya **14 blok = 13 edit
+  + 1 entri TOC**, teks lain identik urutannya.
+- **Yang sengaja tidak disentuh:** padding spasi URL pada 10 entri referensi
+  (identik dengan `work/original_backup.docx` = format bawaan penulis), caption
+  `Gambar 3.1` di dalam kotak, serta seluruh isi substantif dan angka.
+- Hasil: **99 halaman, 25.892 kata** (tak berubah — spasi bukan kata), 1.750
+  paragraf (di luar kotak teks), 46 tabel, 0 error field, inventaris **194
+  `instrText` / 582 `fldChar` (rasio 3.00)**, rujukan silang **0 putus** (subbab 16,
+  Tabel 59, Algoritme 9, Gambar 14, Bab 24), sitasi **43/43**, 5 Algoritme, Bab IV
+  6 subbab. Run italic tampak identik (1.228 berhuruf — satu run yang hilang hanya
+  berisi spasi murni), 2 penanda revisi `EE0000` identik, 10 entri References
+  ber-padding identik dengan `HEAD`.
 
 ### Ronde 9 — audit caption↔rujukan, aritmetika tabel, tabel kosong dihapus ✅
 
@@ -703,8 +750,9 @@ sudah diberi disclaimer benar di p481 ("satu proses pelatihan… belum dapat dij
 
 ---
 
-*Terakhir disesuaikan pada ronde 9 (audit caption↔rujukan & aritmetika tabel
-lengkap — semua bersih; tabel RCA kosong 9 baris dihapus, paginasi Bab 6 dibuat
-deterministik) dengan berkas `Mulai Revisi RCA BARU_..._REVISI.docx`
+*Terakhir disesuaikan pada ronde 10 (spasi nyasar di 6 heading + 1 heading
+berspasi depan + 5 paragraf dibersihkan, judul 2.8 `Tiktok` → `TikTok`, entri
+DAFTAR ISI ikut ter-regenerate, dan `postchk.py` dikoreksi agar menghitung caption
+dalam text box) dengan berkas `Mulai Revisi RCA BARU_..._REVISI.docx`
 (99 halaman, 25.892 kata, 6 subbab di Bab 4, ABSTRAK 204 kata).*
 *Commit pipeline tetap `703d9c4` — kode IndoBERT tidak diubah.*
