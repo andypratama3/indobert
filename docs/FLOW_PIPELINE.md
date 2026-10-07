@@ -532,6 +532,18 @@ sudah diberi disclaimer benar di p481 ("satu proses pelatihan… belum dapat dij
   paragraf RCA diganti karena tahap sebelumnya kini adalah 10-Fold CV.
 - Dirapikan: "selanjutnya" kembar di akhir 4.5, pointer "subbab 5.8" yang diulang
   di lead-in Tabel 4.9.
+- **Sistematika Pembahasan (Bab 1)** — deskripsi Bab 4 masih menyebut "analisis
+  sentimen berbasis aspek" dan "identifikasi permasalahan" sebagai isi Bab 4.
+  Diganti: `…, hingga penerapan Root Cause Analysis (RCA) untuk menghasilkan
+  rekomendasi perbaikan tata kelola.` (italik *text preprocessing*,
+  *10-Fold Cross Validation*, *Root Cause Analysis* tetap di run terpisah.)
+- **Cacat yang saya buat sendiri di ronde awal**: paragraf "Catatan keterbatasan
+  hasil RCA" (733 karakter) salah memakai gaya `Title` sehingga (a) tampil
+  16pt bold rata tengah, (b) **ikut masuk DAFTAR ISI** sebagai entri palsu
+  antara `BAB 6 KESIMPULAN DAN SARAN` dan `6.1 Kesimpulan`. Gaya diganti
+  `Body Text`, typo `ber rests pada` → `dapat ditelusuri berkat`, dan
+  `pada subbab ini` → `pada subbab 5.9` (paragraf ini ada di Bab 6).
+  DAFTAR ISI bersih: 104 entri, tanpa entri terlalu panjang.
 - Hasil: **98 halaman** (dari 99), 380 field, 0 error field, 0 rujukan putus.
 - Bug yang ditemukan dan diperbaiki saat pengerjaan: penghapusan tabel sempat
   salah sasaran karena caption RCA sudah lebih dulu diganti 4.6 → 4.5 sehingga
