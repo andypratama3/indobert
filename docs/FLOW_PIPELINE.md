@@ -262,13 +262,20 @@ Pemetaan ini disusun dengan membaca urutan *heading* + caption di dalam
 | 4.3 Text Preprocessing | 1, 2 | Tabel 4.6, Algoritme 4.2 |
 | 4.4 Fine-Tuning IndoBERT | 5 | Tabel 4.7, Algoritme 4.3 |
 | 4.5 10-Fold Cross Validation | 5 | Tabel 4.8, Algoritme 4.4 |
-| 4.6 Prediksi Seluruh Komentar | 6 | **tidak ada tabel / algoritme** ⚠️ |
-| 4.7 Identifikasi Permasalahan | 9–12 | Tabel 4.9, Tabel 4.10, Algoritme 4.5 |
-| 4.8 Root Cause Analysis (RCA) | 13 | Tabel 4.11, Algoritme 4.6 |
+| 4.6 Root Cause Analysis (RCA) | 13 | Tabel 4.9, Algoritme 4.5 |
 
-> Subbab 4.6 (metode out-of-fold, inti koreksi *leakage*) adalah satu-satunya
-> subbab metode yang **tidak punya algoritme maupun tabel pendukung**. Bila dosen
-> ingin melihat alur prediksinya, ini titik yang perlu ditambah.
+> **Subbab "Prediksi Seluruh Komentar" dan "Identifikasi Permasalahan" sudah
+> dihapus dari Bab 4** (ronde 4, permintaan penulis). Bab 4 kini 6 subbab, dan
+> penomoran otomatis menggeser RCA dari 4.8 menjadi 4.6.
+>
+> - **Metode** tetap utuh di **Bab 3.5.3** (prediksi *out-of-fold*, inti koreksi
+>   *leakage*) dan **Bab 3.5.4** (identifikasi dua tahap + *open coding*).
+> - **Hasil** tetap di **Bab 5.6** dan **Bab 5.8**.
+> - Akibatnya 4.5 ditutup dengan kalimat penghubung yang menunjuk ke 3.5.3/3.5.4,
+>   dan rujukan silang lama dialihkan: `subbab 4.6 → 3.5.3`, `4.7 → 3.5.4` (metode)
+>   atau `→ 5.8` / `5.7` (hasil), `Algoritme 4.6 → 4.5`.
+> - Caption Algoritme berupa **teks biasa, bukan field `SEQ`**, jadi penomoran
+>   ulangnya dilakukan manual di dalam tabel.
 
 ### Bab 5 — Hasil Penelitian dan Pembahasan
 
@@ -489,27 +496,47 @@ Satu per satu:
 | # | Isu | Status |
 |---|---|---|
 | 1 | **Gambar 5.5 kontradiktif.** Caption "Confusion Matrix Fold 6" padahal paragraf bilang agregat 10 fold, dan `confusion_matrix_overall.png` tidak pernah ada. | ✅ **diperbaiki** — PNG agregat dibuat dari `cv/confusion_matrix_overall.csv` (621/800 = 77,62%), gambar tertanam diganti, caption → "Confusion Matrix Agregat 10 Fold", DAFTAR GAMBAR ikut ter-update. |
-| 2 | **Tabel 4.9 belum 8 kelas** + desimal titik (`12.11%`). | ✅ **diperbaiki** — dirombak jadi 10×5 (8 kelas + baris Total), semua desimal koma, jumlah 1.031 dan persentase tepat 100,00%. Lebar kolom ditata ulang (total twips tidak berubah). |
-| 3 | **Subbab 4.7** — saran Pak Bayu: hapus, tapi dia sekaligus memberi perbaikan detail *untuk* isi 4.7. | ✅ **dipertahankan + isinya diperbaiki** — keputusan paling aman & bisa dibalik; menghapus akan merenumber 4.8→4.7, menggeser Tabel 4.x/5.x, dan memutus rujukan di 5.8. Kalau tetap mau dihapus, tinggal bilang. |
+| 2 | **Tabel 4.9 belum 8 kelas** + desimal titik (`12.11%`). | ✅ **diperbaiki lalu dihapus** — dirombak jadi 10×5 (8 kelas + Total, desimal koma), tetapi pada ronde 3 tabel ini beserta Tabel 4.10 dihapus dari Bab 4 saat pemisahan *hasil*/*proses*. Setara isinya kini di Tabel 5.10–5.14. |
+| 3 | **Subbab 4.7** — saran Pak Bayu: hapus, tapi dia sekaligus memberi perbaikan detail *untuk* isi 4.7. | ✅ **DIHAPUS** (ronde 4, permintaan penulis, bersama 4.6) — Bab 4 kini 6 subbab dan RCA jadi 4.6. Metode tetap di Bab 3.5.3/3.5.4, hasil tetap di Bab 5.6/5.8; seluruh rujukan silang dialihkan dan lolos audit silang (subbab 15, Tabel 59, Algoritme 9, Gambar 14, Bab 23 — nol putus). |
 | 4 | **Paragraf imbalance** perlu ditopang literatur. Referensi tak ada di daftar pustaka. | ⚠️ **paragraf sudah ditulis, sitasi BELUM** — pakai angka sendiri (950/1.031 = 92,14%; kelas 54,22% s/d 0,00%) tanpa mengarang sitasi. Kalau Pak Bayu tetap minta rujukan, **kasih saya referensi aslinya**. |
 | 5 | ~~Kalimat terpotong di "Tahap kedua dilakukan…"~~ | ❌ **bukan isu** — kalimatnya lengkap; info di laporan sebelumnya keliru. |
 | 6 | **Keterangan kolom `AI Aspect` / `AI Sentiment`** belum dijelaskan. | ✅ **diperbaiki** — dijelaskan sebagai label dari AI sebagai salah satu dari tiga pemberi label, diperiksa terpisah sebelum *majority voting*. Typo `pustaka  / di jelaskan` ikut diperbaiki. |
 | 7 | ~~5.8 menyebut "sampel" padahal semua 950 dikodekan~~ | ❌ **bukan isu** — 5.8.2 (telaah kualitatif) memang pakai sampel acak untuk Tabel 5.14; 5.8.3 memang pakai seluruh 950. Keduanya sudah benar dan konsisten. |
-| 8 | **Subbab 4.6 tanpa objek pendukung.** Satu-satunya subbab metode tanpa tabel/algoritme, padahal di situ inti koreksi *leakage*-nya. | ⏸ terbuka — butuh Algoritme baru dari `predict_absa_oof.py`; minta konfirmasi kalau mau ditambah. |
-| 9 | **Coding manual hanya 4 dari 8 kelas** (hanya negatif). | ✅ **diperjelas** — Tabel 4.9 kini menampilkan 8 kelas, sedangkan p440 eksplisit menyebut pengodean hanya pada komentar **bersentimen negatif** per aspek. |
+| 8 | **Subbab 4.6 tanpa objek pendukung.** Satu-satunya subbab metode tanpa tabel/algoritme, padahal di situ inti koreksi *leakage*-nya. | ✅ **selesai lewat penghapusan** — 4.6 dan 4.7 dihapus, jadi isu ini kedaluwarsa. Bab 4.6 baru (RCA) punya Tabel 4.9 + Algoritme 4.5. Inti koreksi *leakage* tetap dijelaskan di Bab 3.5.3 dan dilaporkan di 5.6. Tidak perlu Algoritme baru dari `predict_absa_oof.py`. |
+| 9 | **Coding manual hanya 4 dari 8 kelas** (hanya negatif). | ✅ **diperjelas** — pengodean eksplisit hanya pada komentar **bersentimen negatif** per aspek (Bab 3.5.4 dan 5.8.3); tabel distribusi 8 kelas kini sepenuhnya di Bab 5 (Tabel 5.10–5.14), sebab Bab 4 tidak lagi memuat tabel hasil. |
 | 10 | **Tahap 7–8 (koding tematik) tidak dipakai** di skripsi. | ℹ️ info — tidak masalah, asal laporan konsisten menyebut metode yang benar-benar dilaporkan. |
 
 ### Koreksi atas laporan saya sebelumnya ❌
 
 Dua "isu" yang saya catat ternyata **salah** dan sengaja tidak diubah:
 
-1. **"Kalimat terpotong"** — kalimat di p440 lengkap dari awal.
+1. **"Kalimat terpotong"** — kalimat "Tahap kedua dilakukan…" lengkap dari awal.
+   (Indeks paragrafnya sudah berganti-ganti tiap DAFTAR ISI diregenerasi, jadi
+   rujukan isi lebih andal daripada nomor `pNN`.)
 2. **"5.8 salah bilang sampel"** — justru benar; ada pemisahan 5.8.2 (sampel) vs 5.8.3 (seluruh populasi).
 
 Satu "temuan" lain juga ternyata salah: **Tabel 5.7 (76,25%) bersumber sah** dari
 `data/results/indobert_aspect_sentiment_evaluation.csv` (kolom `eval_accuracy` = `0.7625`).
 RegEx pencarian saya sebelumnya mencari `76.25`, padahal isinya `0.7625`. Tabel itu juga
 sudah diberi disclaimer benar di p481 ("satu proses pelatihan… belum dapat dijadikan acuan utama").
+
+### Ronde 4 — subbab 4.6 dan 4.7 dihapus ✅
+
+- Bab 4: 8 subbab → **6 subbab**; RCA naik dari 4.8 menjadi **4.6** (penomoran
+  otomatis lewat style `Judul2`/`numId=5`, tidak ada yang diketik manual).
+- Tabel Algoritme *Identifikasi* dihapus, Algoritme RCA **4.6 → 4.5** (teks biasa).
+- Kalimat penghubung ditambahkan di **akhir 4.5** supaya alur 4.5 → 4.6 tidak
+  melompat: prediksi + identifikasi dirujuk ke subbab 3.5.3 dan 3.5.4.
+- Rujukan silang dialihkan — `4.6 → 3.5.3`, `4.7 → 3.5.4` (untuk *metode*) dan
+  `→ 5.8` / `5.7` (untuk *hasil*); "yang diperoleh pada tahap sebelumnya" di dua
+  paragraf RCA diganti karena tahap sebelumnya kini adalah 10-Fold CV.
+- Dirapikan: "selanjutnya" kembar di akhir 4.5, pointer "subbab 5.8" yang diulang
+  di lead-in Tabel 4.9.
+- Hasil: **98 halaman** (dari 99), 380 field, 0 error field, 0 rujukan putus.
+- Bug yang ditemukan dan diperbaiki saat pengerjaan: penghapusan tabel sempat
+  salah sasaran karena caption RCA sudah lebih dulu diganti 4.6 → 4.5 sehingga
+  ada dua tabel "Algoritme 4.5" dan loop mengambil kecocokan terakhir. Dipulihkan
+  dari backup `work/pre_hapus_4647.docx`, seleksi diganti berdasar *judul* caption.
 
 ### Yang sudah diperbaiki di ronde sebelumnya ✅
 
@@ -522,5 +549,6 @@ sudah diberi disclaimer benar di p481 ("satu proses pelatihan… belum dapat dij
 
 ---
 
-*Terakhir disesuaikan dengan commit `703d9c4` dan berkas
-`Mulai Revisi RCA BARU_..._REVISI.docx`.*
+*Terakhir disesuaikan pada ronde 4 (penghapusan subbab 4.6/4.7) dengan berkas
+`Mulai Revisi RCA BARU_..._REVISI.docx` (98 halaman, 6 subbab di Bab 4).*
+*Commit pipeline tetap `703d9c4` — kode IndoBERT tidak diubah.*
