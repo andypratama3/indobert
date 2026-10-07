@@ -16,6 +16,12 @@ checkpoint-*/
 # --- Large/redundant backups ---
 backup/
 
+# --- Scratch & skill clone (never commit) ---
+# `work/` berisi backup DOCX + ekstraksi XML sementara; `office-skripsi/`
+# adalah repo Git terpisah (kalau di-`git add`, jadi gitlink tanpa .gitmodules).
+Laporan_skripsi/work/
+Laporan_skripsi/office-skripsi/
+
 # --- Byte-compiled / cache ---
 __pycache__/
 *.py[cod]
