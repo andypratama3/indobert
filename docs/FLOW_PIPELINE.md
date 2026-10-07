@@ -543,8 +543,31 @@ sudah diberi disclaimer benar di p481 ("satu proses pelatihan… belum dapat dij
   antara `BAB 6 KESIMPULAN DAN SARAN` dan `6.1 Kesimpulan`. Gaya diganti
   `Body Text`, typo `ber rests pada` → `dapat ditelusuri berkat`, dan
   `pada subbab ini` → `pada subbab 5.9` (paragraf ini ada di Bab 6).
-  DAFTAR ISI bersih: 104 entri, tanpa entri terlalu panjang.
-- Hasil: **98 halaman** (dari 99), 380 field, 0 error field, 0 rujukan putus.
+  DAFTAR ISI bersih, tanpa entri terlalu panjang.
+- **Bab 4 dibersihkan dari angka hasil** (pedoman Pak Bayu: bab 4 = proses,
+  bab 5 = hasil). Paragraf 4.2 "Hasil pelabelan menghasilkan 800 komentar…"
+  adalah satu-satunya paragraf Bab IV yang melaporkan angka hasil, dan angkanya
+  tersalin persis di Bab V (`717`/`83` → p453; `305`/`6` → p456). Dipangkas
+  menjadi kualitatif + penunjuk `subbab 5.2`, sementara persentase
+  `89,6%`/`10,4%` **dipindah ke p453 (Bab 5)** sehingga tidak ada informasi
+  yang hilang. Italik *fine-tuning* tetap di run terpisah. Verifikasi:
+  `717`, `83 komentar`, `305` masing-masing turun tepat 1×, `89,6`/`10,4`
+  pindah lokasi ke p453, seluruh angka kunci lain identik.
+- **DAFTAR ISI tidak berjudul** — cacat bawaan dokumen (ada juga di
+  `work/original_backup.docx`, jadi bukan akibat suntingan ronde sebelumnya).
+  Paragraf tepat sebelum SDT yang memuat field TOC memakai style
+  `DefaultHeading` (bold + caps + 16pt + rata tengah + `pageBreakBefore` +
+  `outlineLvl=0`, identik dengan style heading `DAFTAR TABEL`) tetapi teksnya
+  hanya satu spasi. Diisi `DAFTAR ISI`; kini menjadi entri pertama daftar isi
+  (`DAFTAR ISI 2`), konsisten dengan `DAFTAR TABEL 5` dan `DAFTAR GAMBAR 7`
+  yang memang sudah tercantum di TOC.
+- Hasil: **98 halaman**, 0 error field, 0 rujukan putus (subbab 16, Tabel 59,
+  Algoritme 9, Gambar 14, Bab 24). Inventaris field XML = 193 `instrText` /
+  579 `fldChar` (rasio 3.00). **Catatan alat**: counter `Fields.Count` dari
+  Word COM (pernah melapor 380 lalu 378) **tidak stabil** karena bergantung
+  pada apakah TOC sudah diregenerasi ketika dokumen dibuka — jangan dipakai
+  sebagai penanda regresi; inventaris `instrText`/`fldChar` di XML yang
+  dipakai sebagai rujukan.
 - Bug yang ditemukan dan diperbaiki saat pengerjaan: penghapusan tabel sempat
   salah sasaran karena caption RCA sudah lebih dulu diganti 4.6 → 4.5 sehingga
   ada dua tabel "Algoritme 4.5" dan loop mengambil kecocokan terakhir. Dipulihkan
