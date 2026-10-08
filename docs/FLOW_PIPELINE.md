@@ -687,6 +687,39 @@ kode pipeline yang diubah.
   tidak menyentuh sesi Word pengguna). Hasil akhir: **TOC=1, TOF=6, 94
   halaman, 24.735 kata, ABSTRAK 257 kata**.
 
+### Ronde 16 — sinkronisasi gambar distribusi (Gambar 4.1–4.7 & 5.1) dengan tabel ✅
+
+Penulis melaporkan gambar tertanam (Gambar 4.1–4.7, 5.1) tidak sinkron dengan
+angka tabelnya (contoh: Gambar 4.1 vs Tabel 4.6). Audit membuktikan media
+tertanam memang **render lama** (pra-verifikasi data); satu-satunya yang benar
+adalah Gambar 4.4 (`confusion_matrix_overall.png`, sudah dibuat ulang dari
+`cv/confusion_matrix_overall.csv` pada Ronde 14 → diag 621/800 = 77,625%).
+
+- **Chart dibuat ulang read-only dari CSV** (sumber data sama dengan tabel):
+  Gambar 4.1–4.3 dari `dataset_train.csv` (363/263/99/75; 717/83;
+  305/251/92/69/58/12/7/6), Gambar 4.5–4.7 dari
+  `indobert_absa_result_oof.csv` (636/299/64/32; 950/81; silang
+  559/77/295/4/64/0/32/0), Gambar 5.1 dari
+  `identifikasi_permasalahan/distribusi_aspek_sentimen.csv` (559/87,89%,
+  295/98,66%, 64/100,00%, 32/100,00%). Gaya bar chart meniru script pipeline
+  (`visualization/visualize.py`, `visualize_absa.py`,
+  `analysis/analysis_pipeline.py` STEP 5) sehingga rasio aspek sama dengan
+  ukuran tampil di dokumen (`(8,5)`, `(7,5)`, `(10,6)`, `(9,6)`, `(14,6)` →
+  extent gambar tidak diubah).
+- **Penggantian gambar** via python-docx (tingkat part, bukan teks run): `blip`
+  `r:embed` diarahkan ke part gambar baru (`get_or_add_image`), rel lama
+  `drop_rel`; image1 (cover), image2 (Bab 2), image6 (Gambar 4.4) tidak
+  disentuh. Verifikasi pasca-simpan: 7 media baru **byte-identik** dengan chart
+  sumber (diff piksel 0,0000), lokasi body ↔ caption benar, extent sama.
+- **Temuan sampingan**: salinan kerja docx ternyata telah di-save ulang oleh
+  Word pengguna setelah Ronde 15 (dibuktikan `~WRL*.tmp` + run membengkak
+  4.878 → 8.635, `EE0000` hilang, warna eksplisit → `000000`). Docx di-restore
+  dari `94f516d`, embed diulang pada HEAD-origin, lalu refresh field via
+  `update_fields.ps1` — `EE0000` tetap 1, italic run 1.014, halaman **94**,
+  kata **24.735** (tidak berubah).
+- **QA `finalcheck.py` = 0 gagal** (italic 1.014, `EE0000` 1, caption & ref
+  tetap, invariant angka Bab 4 ≡ Abstrak/1.6/1.7/Bab 6).
+
 ### Ronde 14 — scaffold paragraf kosong front matter dihapus (BAB 1) ✅
 
 - **Blok 26 paragraf kosong** di front matter — persis di antara entri terakhir
