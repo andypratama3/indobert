@@ -253,55 +253,57 @@ Mengkuantifikasi **116 baris anotasi** yang tidak ada di korpus mentah (BUG-07).
 Pemetaan ini disusun dengan membaca urutan *heading* + caption di dalam
 `_REVISI.docx`, bukan dari asumsi penomoran.
 
-### Bab 4 — Pengolahan Data dan Implementasi Metode
+> Peta di bawah ini adalah struktur **ronde 15 / Fase B dokumen** (judul BAB 4
+> dan BAB 5 baru). Struktur lama ("Pengolahan Data dan Implementasi Metode" /
+> "Hasil Penelitian dan Pembahasan" dengan subbab 5.1–5.9) sudah tidak berlaku.
+
+### Bab 4 — ANALISIS SENTIMEN BERBASIS ASPEK MENGGUNAKAN INDOBERT
+
+Bab 4 = **proses + hasil analisis setiap tahap hingga Prediksi** (angka hasil
+terverifikasi dari CSV), tanpa RCA/identifikasi.
 
 | Subbab | Tahap pipeline | Objek di skripsi |
 |---|---|---|
 | 4.1 Pengumpulan Data | 0, 1 | Tabel 4.1, Tabel 4.2, Algoritme 4.1 |
-| 4.2 Pelabelan Data | 4 | Tabel 4.3, Tabel 4.4, Tabel 4.5 |
-| 4.3 Text Preprocessing | 1, 2 | Tabel 4.6, Algoritme 4.2 |
-| 4.4 Fine-Tuning IndoBERT | 5 | Tabel 4.7, Algoritme 4.3 |
-| 4.5 10-Fold Cross Validation | 5 | Tabel 4.8, Algoritme 4.4 |
-| 4.6 Root Cause Analysis (RCA) | 13 | Tabel 4.9, Algoritme 4.5 |
+| 4.2 Pelabelan Data | 4 | Tabel 4.3–4.5 (hybrid annotation), Tabel 4.6–4.8 + Gambar 4.1–4.3 (distribusi label final), paragraf *inter-annotator* kappa |
+| 4.3 Text Preprocessing | 1, 2 | Tabel 4.9, Algoritme 4.2 |
+| 4.4 Fine-Tuning IndoBERT | 5 | Tabel 4.10, Tabel 4.11, Algoritme 4.3 |
+| 4.5 10-Fold Cross Validation | 5, 18 | Tabel 4.12–4.14, Gambar 4.4, Algoritme 4.4 |
+| 4.6 Prediksi | 6, 16 | Tabel 4.15–4.17, Gambar 4.5–4.7 |
+| 4.6.1 Distribusi Aspek Hasil Prediksi | 6, 16 | Tabel 4.15, Gambar 4.5 |
+| 4.6.2 Distribusi Sentimen Hasil Prediksi | 6, 16 | Tabel 4.16, Gambar 4.6 |
+| 4.6.3 Distribusi Aspek dan Sentimen Hasil Prediksi | 6, 16 | Tabel 4.17, Gambar 4.7 |
 
-> **Subbab "Prediksi Seluruh Komentar" dan "Identifikasi Permasalahan" sudah
-> dihapus dari Bab 4** (ronde 4, permintaan penulis). Bab 4 kini 6 subbab, dan
-> penomoran otomatis menggeser RCA dari 4.8 menjadi 4.6.
->
 > - **Metode** tetap utuh di **Bab 3.5.3** (prediksi *out-of-fold*, inti koreksi
 >   *leakage*) dan **Bab 3.5.4** (identifikasi dua tahap + *open coding*).
-> - **Hasil** tetap di **Bab 5.6** dan **Bab 5.8**.
-> - Akibatnya 4.5 ditutup dengan kalimat penghubung yang menunjuk ke 3.5.3/3.5.4,
->   dan rujukan silang lama dialihkan: `subbab 4.6 → 3.5.3`, `4.7 → 3.5.4` (metode)
->   atau `→ 5.8` / `5.7` (hasil), `Algoritme 4.6 → 4.5`.
-> - Caption Algoritme berupa **teks biasa, bukan field `SEQ`**, jadi penomoran
->   ulangnya dilakukan manual di dalam tabel.
+> - Caption Algoritme berupa **teks biasa, bukan field `SEQ`** — penomoran
+>   ulangnya manual (kini 4.1–4.4; Algoritme RCA 4.5 lama tidak ada lagi karena
+>   RCA pindah ke Bab 5 tanpa algoritme baru).
 
-### Bab 5 — Hasil Penelitian dan Pembahasan
+### Bab 5 — PENGEMBANGAN HASIL ANALISIS SENTIMEN BERBASIS ASPEK
+
+Bab 5 = **identifikasi permasalahan + RCA + rekomendasi** (pengembangan hasil
+analisis dari Bab 4).
 
 | Subbab | Tahap pipeline | Objek di skripsi |
 |---|---|---|
-| 5.1 Hasil Pengumpulan Data | 1 | Tabel 5.1, Gambar 5.1 |
-| 5.2 Hasil Pelabelan Data | 4 | Tabel 5.2–5.4, Gambar 5.2–5.4 |
-| 5.3 Hasil Text Preprocessing | 1 | Tabel 5.5 |
-| 5.4 Hasil Fine-Tuning IndoBERT | 5 | Tabel 5.6, Tabel 5.7 |
-| 5.5 Hasil 10-Fold Cross Validation | 5, 15, 18 | Tabel 5.8, Tabel 5.9, Gambar 5.5 |
-| 5.6 Hasil Prediksi Seluruh Komentar | 6 | — |
-| 5.7.1 Distribusi Aspek Hasil Prediksi | 6, 16 | Tabel 5.10, Gambar 5.6 |
-| 5.7.2 Distribusi Sentimen Hasil Prediksi | 6, 16 | Tabel 5.11, Gambar 5.7 |
-| 5.7.3 Distribusi Aspek dan Sentimen | 6, 16 | Tabel 5.12, Gambar 5.8 |
-| 5.8.1 Distribusi Sentimen Negatif per Aspek | 9–12 | Tabel 5.13, Gambar 5.9 |
-| 5.8.2 Telaah Kualitatif Komentar Negatif | 13 | Tabel 5.14 |
-| 5.8.3 Analisis Isi (Content Analysis) | 9–12 | Tabel 5.15–5.18 |
-| 5.9.1–5.9.4 Hasil RCA per aspek | 13 | Tabel 5.19–5.22 |
-| 5.9.5 Kesimpulan Hasil RCA | 13 | — |
+| 5.1 Identifikasi Permasalahan | 9–12 | — |
+| 5.1.1 Distribusi Sentimen Negatif per Aspek | 9–12 | Tabel 5.1, Gambar 5.1 |
+| 5.1.2 Identifikasi Masalah Menggunakan Analisis Isi (Content Analysis) | 9–12 | Tabel 5.2–5.5 |
+| 5.2 Root Cause Analysis (RCA) | 13 | Tabel 5.6–5.11 |
+| 5.2.1 Aspek Akuntabilitas | 13 | Tabel 5.6, Tabel 5.7 |
+| 5.2.2 Aspek Efektivitas dan Efisiensi | 13 | Tabel 5.8, Tabel 5.9 |
+| 5.2.3 Aspek Responsivitas | 13 | Tabel 5.10 |
+| 5.2.4 Aspek Transparansi | 13 | Tabel 5.11 |
+| 5.2.5 Kesimpulan Hasil Root Cause Analysis (RCA) | 13 | — |
+| 5.3 Rekomendasi | 13 | Tabel 5.12 (dari `rca_rekomendasi.csv`) |
 | Bab 3 — keterbatasan metodologi | 14, 15 | `provenance_*.csv`, `per_class_metrics.csv` |
 
 ### Tahap yang TIDAK dikutip di skripsi
 
 | Tahap | Output | Status |
 |---|---|---|
-| 7, 8 — koding tematik | `thematic_coding_result.csv`, `thematic_summary.csv`, `gambar_5_10_distribusi_tema.png` | ❌ **Tidak muncul di skripsi.** Tidak ada subbab tematik, tidak ada caption `Gambar 5.10`. Sebagai gantinya skripsi memakai *content analysis* (tahap 9–12) di 5.8.3. |
+| 7, 8 — koding tematik | `thematic_coding_result.csv`, `thematic_summary.csv`, `gambar_5_10_distribusi_tema.png` | ❌ **Tidak muncul di skripsi.** Tidak ada subbab tematik, tidak ada caption `Gambar 5.10`. Sebagai gantinya skripsi memakai *content analysis* (tahap 9–12) di 5.1.2. |
 | 17 — gambar anotasi | `*_annotasi.png` | ⚠️ Hanya dipakai bila membahas distribusi **data latih** — hati-hati jangan disebut sebagai hasil prediksi. |
 
 ---
@@ -312,7 +314,7 @@ Pemetaan ini disusun dengan membaca urutan *heading* + caption di dalam
 
 ```
 1.081   raw scrape (TikTok)
-  -50   terlalu pendek / emoji saja
+  -50   degeneratif (48 stempel tanggal + 1 emoji + 1 rusak Unicode)
 ─────
 1.031   korpus bersih            → comments_clean.csv
                                     ▲
@@ -323,9 +325,16 @@ Pemetaan ini disusun dengan membaca urutan *heading* + caption di dalam
         └ 358  ensemble_*          (tanpa label, majority vote 10 fold)
 ```
 
-> **Catatan penting:** 684 baris anotasi dapat ditemukan di korpus, 116 tidak
-> dapat dipulihkan. Dari 684 itu, **673 masuk hitungan OOF** (6 baris runtuh saat
-> *join*). Yang boleh dikutip: **673 / 358**, bukan 684.
+> **Catatan penting (angka Fase A, diverifikasi ulang dari CSV):** dari 800 baris
+> anotasi, **679 baris teksnya cocok persis dengan korpus** (673 teks unik +
+> 6 baris duplikat — 6 teks itu menempati total 12 baris) dan **121 baris tanpa
+> padanan**. Dari 121 itu, **116 tercatat di `provenance_missing_rows.csv`**
+> (status `not_located_in_raw_scrape`) dan **5 sisanya tidak tercatat di sana** —
+> inilah dasar split "116 komentar terdokumentasi / 5 komentar tidak
+> terdokumentasi" di **1.6 Batasan Masalah** dan **Bab 4.1**. `provenance_audit.csv` menghitung
+> `located_in_raw = 684` (679 + 5 yang dianggap terlacak di raw scrape) dan
+> `not_in_raw = 116`. Yang boleh dikutip untuk komposisi prediksi: **673 / 358**
+> — bukan 679, 684, maupun 121.
 
 ### 6.2 8 kelas distribusi hasil prediksi (1.031 komentar)
 
@@ -355,7 +364,7 @@ Distribusi sentimen: **Negatif 950 (92,14%) · Positif 81 (7,86%)**
 
 ### 6.4 Evaluasi 10-Fold Cross Validation
 
-**Rata-rata 10 fold** (`cv_summary_metrics.csv`) → Tabel 5.9
+**Rata-rata 10 fold** (`cv_summary_metrics.csv`) → Tabel 4.14
 
 | Metrik | Rata-rata (%) |
 |---|---:|
@@ -364,7 +373,7 @@ Distribusi sentimen: **Negatif 950 (92,14%) · Positif 81 (7,86%)**
 | Recall | 77,63 |
 | F1-Score | 76,09 |
 
-**Per fold** (`cv_per_fold_metrics.csv`) → Tabel 5.8
+**Per fold** (`cv_per_fold_metrics.csv`) → Tabel 4.13
 
 | Fold | Accuracy | Precision | Recall | F1-Score |
 |---:|---:|---:|---:|---:|
@@ -383,7 +392,9 @@ Distribusi sentimen: **Negatif 950 (92,14%) · Positif 81 (7,86%)**
 > memegang *Accuracy* tertinggi (82,50%) — tidak ada satu *fold* yang unggul
 > konsisten di semua metrik (Fold 6 unggul di *accuracy* + *precision*, Fold 2 di F1).
 > Metrik "model terbaik" sudah diganti menjadi **out-of-fold** karena memilih satu
-> *fold* lalu memakainya untuk prediksi akan menimbulkan *data leakage*.
+> *fold* lalu memakainya untuk prediksi akan menimbulkan *data leakage*; pada
+> ronde 15 judulnya dirapikan menjadi **"Checkpoint dengan nilai F1 tertinggi
+> pada setiap fold"**.
 
 ---
 
@@ -400,6 +411,12 @@ Distribusi sentimen: **Negatif 950 (92,14%) · Positif 81 (7,86%)**
 | `data/results/cv/confusion_matrix_overall.csv` | Jumlah matriks ke-10 fold |
 | `data/results/rekap_masalah_*.csv` | Kategori masalah per aspek |
 | `data/results/provenance_audit.csv` | Audit 116 baris tak terlacak |
+| `data/results/provenance_missing_rows.csv` | 116 baris anotasi tak terlacak di raw scrape — dasar split "116 terdokumentasi / 5 tidak" |
+| `data/results/identifikasi_permasalahan/laporan_lengkap.csv` | Analisis isi per komentar — dasar Tabel 5.2–5.5 |
+| `data/results/identifikasi_permasalahan/distribusi_aspek_sentimen.csv` | Distribusi sentimen negatif per aspek — dasar Tabel 5.1 |
+| `data/results/identifikasi_permasalahan/distribusi_negatif_per_aspek.png` | Gambar 5.1 |
+| `data/results/identifikasi_permasalahan/rca_rekomendasi.csv` | RCA + rekomendasi per masalah — dasar Tabel 5.6–5.12 |
+| `data/results/identifikasi_permasalahan/sampel_komentar_negatif.csv` | Cuplikan komentar untuk kutipan |
 
 ### ❌ Jangan dikutip
 
@@ -424,8 +441,8 @@ diulang di **caveats bab hasil**.
 | # | Keterbatasan | Angka pendukung |
 |---|---|---|
 | 1 | **Tiga dari delapan kelas punya F1 = 0,000 dan TP = 0** di metrik per-fold: `efektivitas_efisiensi_positif`, `responsivitas_positif`, `transparansi_positif`. Dari 10 fold, Responsivitas-positif zéro di 3 fold dan Transparansi-positif zéro di 4 fold. | `per_class_metrics.csv` |
-| 1b | **Hasil prediksi sangat timpang.** Dari 81 komentar positif: 77 Akuntabilitas + 4 EfE + 0 Responsivitas + 0 Transparansi. Artinya klasifikasi positif praktis hanya bekerja untuk satu aspek. | Tabel 5.12 |
-| 2 | **Ketidakseimbangan 92,14% negatif.** | Tabel distribusi sentimen |
+| 1b | **Hasil prediksi sangat timpang.** Dari 81 komentar positif: 77 Akuntabilitas + 4 EfE + 0 Responsivitas + 0 Transparansi. Artinya klasifikasi positif praktis hanya bekerja untuk satu aspek. | Tabel 4.17 |
+| 2 | **Ketidakseimbangan 92,14% negatif.** | Tabel 4.16 |
 | 3 | **116 baris anotasi tak terlacak** dan tidak acak secara topikal. | χ² = 248,73, df = 3, p ≈ 1,2×10⁻⁵³, Cramér's V = 0,558 |
 | 4 | **Bias 2,34×.** Responsivitas + Transparansi = 21,75% set latih vs 9,31% korpus. | `annotated_not_in_corpus.csv` |
 | 5 | **RCA aspek kecil lemah.** Transparansi: kategori terbesar justru *fallback* "tanpa keluhan spesifik" = 14/32 (**43,7%**) — hampir separuh komentar aspek ini tidak punya keluhan terkategorikan. Responsivitas: 64 komentar dipecah jadi 7 kategori, dan 12 (18,7%) *fallback* + 5 (7,8%) noise = **26,5% tak informatif**. | `rekap_masalah_*.csv` |
@@ -492,6 +509,17 @@ Satu per satu:
 ---
 
 ## 11. Daftar isu yang perlu disesuaikan di skripsi
+
+> ⚠️ **Nomor lama pada tabel di bawah** (subbab 5.6–5.9, Tabel 5.9–5.22,
+> Gambar 5.5–5.9, Algoritme 4.5) adalah status ronde 4–14. Setelah **ronde 15
+> (Fase B dokumen)** struktur berubah menjadi Bab 4 = analisis hingga prediksi
+> (Tabel 4.1–4.17) dan Bab 5 = identifikasi + RCA + rekomendasi (Tabel 5.1–5.12)
+> — peta terkini ada di **§5**. Isu yang sudah diselesaikan tetap tercatat apa
+> adanya sebagai riwayat. Catatan yang sama berlaku untuk **seluruh bagian
+> riwayat ronde** di bawah ini: Ronde 4–14 memakai nomor subbab/tabel sesuai
+> struktur pada masanya (nomor lama), Ronde 15 memakai nomor kini; angka dan
+> struktur FINAL yang berlaku kini ada di **§5** (peta), **§6** (angka
+> cross-check), dan ronde 15.
 
 | # | Isu | Status |
 |---|---|---|
@@ -594,6 +622,70 @@ sudah diberi disclaimer benar di p481 ("satu proses pelatihan… belum dapat dij
   salah sasaran karena caption RCA sudah lebih dulu diganti 4.6 → 4.5 sehingga
   ada dua tabel "Algoritme 4.5" dan loop mengambil kecocokan terakhir. Dipulihkan
   dari backup `work/pre_hapus_4647.docx`, seleksi diganti berdasar *judul* caption.
+
+### Ronde 15 (Fase B dokumen) — Bab 4 = analisis hingga prediksi, Bab 5 = identifikasi + RCA + rekomendasi ✅
+
+Restruktur besar sesuai permintaan penulis. Seluruh angka hasil dibaca
+**read-only dari CSV** (`data/results/identifikasi_permasalahan/*.csv` dan
+file evaluasi); **pipeline dibekukan di `703d9c4`** — tidak ada satu pun baris
+kode pipeline yang diubah.
+
+- **Judul baru**: BAB 4 → `ANALISIS SENTIMEN BERBASIS ASPEK MENGGUNAKAN
+  INDOBERT`; BAB 5 → `PENGEMBANGAN HASIL ANALISIS SENTIMEN BERBASIS ASPEK`.
+- **Bab 4** kini: 4.1 Pengumpulan → 4.2 Pelabelan (termasuk paragraf
+  *inter-annotator* kappa yang baru) → 4.3 Text Preprocessing → 4.4 Fine-Tuning
+  → 4.5 10-Fold (subbab rinci 5.5.1–5.5.10 lama diringkas jadi narasi + Tabel
+  4.13/4.14) → 4.6 Prediksi (4.6.1–4.6.3). Subbab "Hasil …" lama (5.1–5.7)
+  dilebur ke sini sebagai hasil per tahap. Yang **dibuang karena redundan**:
+  **Tabel 5.1 + Gambar 5.1 lama** ("Jumlah Data Penelitian" — kini tercakup
+  Tabel 4.1), **Tabel 5.5** ("Ringkasan Hasil Text Preprocessing" — kini
+  tercakup Tabel 4.1 + Tabel 4.9), **Tabel 5.6** ("Konfigurasi Fine-Tuning" —
+  duplikat persis Tabel 4.7 lama), serta **subbab 4.6 RCA lama beserta Tabel
+  4.9 "Struktur Template … 5 Whys"** (RCA pindah seluruhnya ke Bab 5). Yang
+  **dipindah + direnumber**: Tabel/Gambar distribusi final lama (5.2–5.4) →
+  4.6–4.8/4.1–4.3, evaluasi prediksi lama (5.7.1–5.7.3) → 4.6.1–4.6.3,
+  Gambar 5.9 → Gambar 5.1.
+- **Bab 5** kini: 5.1 Identifikasi Permasalahan (5.1.1 distribusi sentimen
+  negatif per aspek, 5.1.2 analisis isi — subbab lama 5.8.2 "telaah
+  kualitatif" dihapus) → 5.2 Root Cause Analysis (5.2.1–5.2.5, **termasuk RCA
+  Responsivitas & Transparansi yang baru** — keduanya sebelumnya kosong total)
+  → 5.3 Rekomendasi (Tabel 5.12 dari `rca_rekomendasi.csv`).
+- **Renumber caption**: nomor caption di literal dan field `SEQ`
+  (`Gambar_5.` → `Gambar_4.`) disesuaikan; DAFTAR TABEL kini **30 entri**
+  (Tabel 2.1, 4.1–4.17, 5.1–5.12), DAFTAR GAMBAR **9 entri** (Gambar 3.1,
+  4.1–4.7, 5.1). Inventaris field: TOC utama 1 + TOF 6 (`Tabel 2./4./5.`,
+  `Gambar 3./4./5.`), instrText 172 / fldChar 516 (rasio 3,00).
+- **Angka diverifikasi dari CSV**: 1.081 scrape → 50 degeneratif (48 stempel
+  tanggal + 1 emoji + 1 karakter rusak) → korpus 1.031 → 800 berlabel (679
+  cocok korpus = 673 teks unik OOF + 6 duplikat = 12 baris; 121 = 116
+  terdokumentasi + 5 tidak terdokumentasi) → prediksi 1.031 = 673 OOF + 358
+  *majority vote*; distribusi aspek 636/299/64/32; sentimen 950/81; CV
+  Accuracy 0,77625 (SD 0,0388), F1 0,76086; kappa aspek 0,7784/0,8517, sentimen
+  0,8626/0,9742, nol kasus label 3. Abstrak, 1.6, 1.7, dan Bab 6 divalidasi
+  memuat angka identik dengan Bab 4 (tanpa `[CEK DATA]`, tanpa pembulatan
+  liar).
+- **Perbaikan teks**: 2× `±Rp6,02`/`±Rp8,5` → `sekitar Rp6,02 miliar` /
+  `sekitar Rp8,5 miliar` (sel RCA Transparansi); `prediksi.Hasil` →
+  `prediksi. Hasil` (Bab 6); heading 5.2 `Root Cause Analysis (RCA)` yang
+  kehilangan italic dipulihkan (split run: `Root Cause Analysis` miring +
+  ` (RCA)` mewarisi style — sama seperti heading 2.7/3.5.x).
+- **Pola lama dipastikan nol** oleh `finalcheck.py`: `±`, `282 komentar`,
+  `74,01%`, `81,98%`, `Algoritme 4.5`, `telaah kualitatif`, `outperforma`,
+  `Zahra (`, `Postingan`, `5.8.2`, `subbab 5.9`, `Model dengan … terbaik`,
+  `[CEK DATA]`, `<KOSONG>`, serta ref lama (Tabel 5.13+/Gambar 5.2+).
+- **QA `finalcheck.py` = 0 gagal**: sequence caption Tabel 2.1 + 4.1–4.17 +
+  5.1–5.12, Gambar 3.1 + 4.1–4.7 + 5.1, Algoritme 4.1–4.4; seluruh ref in-text
+  ↔ caption konsisten; invariant angka Abstrak/1.6/1.7/Bab 6 ≡ Bab 4; struktur
+  heading Bab 4/5/6 persis; entri DAFTAR ISI/TABEL/GAMBAR lengkap tanpa entri
+  basi; **span italic per-paragraf identik dengan `original_backup.docx` — 0
+  berkurang**; penanda `EE0000` tetap ada pada heading 5.1.
+- **Catatan format**: italic runs kini 1.014 (turun dari 1.231 pra-Fase B
+  karena penggabungan run dan penghapusan paragraf hasil lama — bukan
+  kehilangan italic, dibuktikan perbandingan span per paragraf); `EE0000` 1 run
+  (dulu 2 pada heading yang sama, kini menyatu jadi satu run).
+- **Refresh field 3×** memakai `update_fields.ps1` (instance Word COM terpisah,
+  tidak menyentuh sesi Word pengguna). Hasil akhir: **TOC=1, TOF=6, 94
+  halaman, 24.735 kata, ABSTRAK 257 kata**.
 
 ### Ronde 14 — scaffold paragraf kosong front matter dihapus (BAB 1) ✅
 
@@ -866,11 +958,12 @@ sudah diberi disclaimer benar di p481 ("satu proses pelatihan… belum dapat dij
 
 ---
 
-*Terakhir disesuaikan pada ronde 14 (blok 26 paragraf kosong scaffold di front
-matter sebelum BAB 1 dihapus — halaman 99→98; paragraf pembawa `fldChar(end)`
-penutup field DAFTAR GAMBAR tetap dipertahankan) dan ronde 13 (dua subbab RCA
-kosong 5.9.3/5.9.4 dihapus, `Kesimpulan Hasil RCA` jadi 5.9.3, catatan
-keterbatasan dipindah ke penutup Bab 5, Bab 6 dibuka langsung oleh 6.1) dengan
-berkas `Mulai Revisi RCA BARU_..._REVISI.docx`
-(98 halaman, 25.879 kata, 6 subbab di Bab 4, ABSTRAK 204 kata).*
+*Terakhir disesuaikan pada ronde 15 (Fase B dokumen: BAB 4 = `ANALISIS SENTIMEN
+BERBASIS ASPEK MENGGUNAKAN INDOBERT`, 4.1–4.6 s.d. tahap prediksi; BAB 5 =
+`PENGEMBANGAN HASIL ANALISIS SENTIMEN BERBASIS ASPEK`, 5.1 identifikasi + 5.2
+RCA + 5.3 rekomendasi; caption direnumber menjadi Tabel 4.1–4.17 / 5.1–5.12 dan
+Gambar 4.1–4.7 / 5.1; seluruh angka dibaca dari CSV; `finalcheck.py` 0 gagal)
+dengan berkas `Mulai Revisi RCA BARU_..._REVISI.docx`
+(94 halaman, 24.735 kata, 6 subbab di Bab 4, 3 subbab di Bab 5, ABSTRAK 257
+kata).*
 *Commit pipeline tetap `703d9c4` — kode IndoBERT tidak diubah.*
