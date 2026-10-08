@@ -36,6 +36,11 @@ __pycache__/
 *.zip
 nohup.out
 
+# --- Word temp/lock (dibuat saat Word membuka dokumen) ---
+~$*.docx
+~$*.doc
+~WRL*.tmp
+
 # --- OS / editor cruft ---
 .DS_Store
 Thumbs.db
